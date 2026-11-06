@@ -1,0 +1,221 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1160" height="1448" viewBox="0 0 1160 1448" role="img" aria-labelledby="title desc" font-family="Segoe UI, Arial, sans-serif">
+<title id="title">Kit de bancada do elevador — ligações da protoboard</title>
+<desc id="desc">Diagrama por nome de pino do STM32F411. Inclui alimentação, joystick, seis contatos, LCD com conversor de nível e pontos de medição da ponte desabilitada.</desc>
+<rect x="0" y="0" width="1160" height="1448" rx="0" fill="#f5f7f5" stroke="none"/>
+<rect x="0" y="0" width="1160" height="122" rx="0" fill="#183832" stroke="none"/>
+<text x="32" y="31" font-size="15" font-weight="700" fill="#a9dccc" text-anchor="start">MÁQUINAS E ACIONAMENTOS   /   MINI ELEVADOR</text>
+<text x="32" y="80" font-size="42" font-weight="700" fill="#ffffff" text-anchor="start">Ligações da protoboard</text>
+<text x="33" y="108" font-size="17" font-weight="400" fill="#d6e8df" text-anchor="start">STM32F411CEU6  ·  Firmware kit-bancada  ·  Use os nomes impressos nos headers da sua placa.</text>
+<rect x="26" y="140" width="1108" height="163" rx="14" fill="#ffffff" stroke="#c8d7d0"/>
+<text x="48" y="179" font-size="16" font-weight="700" fill="#147963" text-anchor="start">01</text>
+<text x="87" y="179" font-size="24" font-weight="700" fill="#183832" text-anchor="start">Alimentação e barramentos</text>
+<text x="55" y="220" font-size="19" font-weight="700" fill="#a8490f" text-anchor="start">3V3 da placa</text>
+<line x1="55" y1="235" x2="350" y2="235" stroke="#a8490f" stroke-width="4"/>
+<circle cx="55" cy="235" r="4" fill="#a8490f"/>
+<circle cx="350" cy="235" r="4" fill="#a8490f"/>
+<text x="55" y="261" font-size="16" font-weight="400" fill="#183832" text-anchor="start">joystick + LV do conversor</text>
+<text x="419" y="220" font-size="19" font-weight="700" fill="#8a3682" text-anchor="start">5 V regulados</text>
+<line x1="419" y1="235" x2="710" y2="235" stroke="#8a3682" stroke-width="4"/>
+<circle cx="419" cy="235" r="4" fill="#8a3682"/>
+<circle cx="710" cy="235" r="4" fill="#8a3682"/>
+<text x="419" y="261" font-size="16" font-weight="400" fill="#183832" text-anchor="start">LCD + HV do conversor</text>
+<text x="779" y="220" font-size="19" font-weight="700" fill="#48555a" text-anchor="start">GND comum</text>
+<line x1="779" y1="235" x2="1103" y2="235" stroke="#48555a" stroke-width="4"/>
+<circle cx="779" cy="235" r="4" fill="#48555a"/>
+<circle cx="1103" cy="235" r="4" fill="#48555a"/>
+<text x="779" y="261" font-size="16" font-weight="400" fill="#183832" text-anchor="start">placa, módulos, chaves e instrumento</text>
+<text x="53" y="286" font-size="16" font-weight="400" fill="#49645d" text-anchor="start">Use trilhos separados para 3,3 V e 5 V. Com tudo desligado, confira continuidade nos trilhos que têm divisão no meio.</text>
+<rect x="26" y="322" width="441" height="370" rx="14" fill="#ffffff" stroke="#c8d7d0"/>
+<text x="48" y="361" font-size="16" font-weight="700" fill="#147963" text-anchor="start">02</text>
+<text x="87" y="361" font-size="24" font-weight="700" fill="#183832" text-anchor="start">Joystick KY-023</text>
+<text x="51" y="401" font-size="16" font-weight="700" fill="#49645d" text-anchor="start">Trilho / STM32</text>
+<text x="346" y="401" font-size="16" font-weight="700" fill="#49645d" text-anchor="middle">Joystick</text>
+<rect x="50" y="420" width="92" height="30" rx="6" fill="#e8f3ee" stroke="none"/>
+<text x="96" y="441" font-size="16" font-weight="700" fill="#183832" text-anchor="middle">3V3</text>
+<line x1="142" y1="435" x2="294" y2="435" stroke="#a8490f" stroke-width="2.5"/>
+<circle cx="144" cy="435" r="4" fill="#a8490f"/>
+<circle cx="294" cy="435" r="4" fill="#a8490f"/>
+<rect x="295" y="420" width="109" height="30" rx="6" fill="#e8f3ee" stroke="none"/>
+<text x="349.5" y="441" font-size="16" font-weight="700" fill="#183832" text-anchor="middle">VCC</text>
+<rect x="50" y="464" width="92" height="30" rx="6" fill="#e8f3ee" stroke="none"/>
+<text x="96" y="485" font-size="16" font-weight="700" fill="#183832" text-anchor="middle">GND</text>
+<line x1="142" y1="479" x2="294" y2="479" stroke="#48555a" stroke-width="2.5"/>
+<circle cx="144" cy="479" r="4" fill="#48555a"/>
+<circle cx="294" cy="479" r="4" fill="#48555a"/>
+<rect x="295" y="464" width="109" height="30" rx="6" fill="#e8f3ee" stroke="none"/>
+<text x="349.5" y="485" font-size="16" font-weight="700" fill="#183832" text-anchor="middle">GND</text>
+<rect x="50" y="508" width="92" height="30" rx="6" fill="#e8f3ee" stroke="none"/>
+<text x="96" y="529" font-size="16" font-weight="700" fill="#183832" text-anchor="middle">PA0</text>
+<line x1="142" y1="523" x2="294" y2="523" stroke="#147963" stroke-width="2.5"/>
+<circle cx="144" cy="523" r="4" fill="#147963"/>
+<circle cx="294" cy="523" r="4" fill="#147963"/>
+<rect x="295" y="508" width="109" height="30" rx="6" fill="#e8f3ee" stroke="none"/>
+<text x="349.5" y="529" font-size="16" font-weight="700" fill="#183832" text-anchor="middle">VRy¹</text>
+<rect x="50" y="552" width="92" height="30" rx="6" fill="#e8f3ee" stroke="none"/>
+<text x="96" y="573" font-size="16" font-weight="700" fill="#183832" text-anchor="middle">PA2</text>
+<line x1="142" y1="567" x2="294" y2="567" stroke="#147963" stroke-width="2.5"/>
+<circle cx="144" cy="567" r="4" fill="#147963"/>
+<circle cx="294" cy="567" r="4" fill="#147963"/>
+<rect x="295" y="552" width="109" height="30" rx="6" fill="#e8f3ee" stroke="none"/>
+<text x="349.5" y="573" font-size="16" font-weight="700" fill="#183832" text-anchor="middle">SW</text>
+<text x="51" y="618" font-size="16" font-weight="400" fill="#183832" text-anchor="start">¹ Pode usar VRx no lugar de VRy. Ligue só um</text>
+<text x="51" y="641" font-size="16" font-weight="400" fill="#183832" text-anchor="start">eixo e oriente o módulo para que a leitura</text>
+<text x="51" y="664" font-size="16" font-weight="400" fill="#183832" text-anchor="start">do ADC aumente ao selecionar “subir”.</text>
+<rect x="485" y="322" width="649" height="370" rx="14" fill="#ffffff" stroke="#c8d7d0"/>
+<text x="507" y="361" font-size="16" font-weight="700" fill="#147963" text-anchor="start">03</text>
+<text x="546" y="361" font-size="24" font-weight="700" fill="#183832" text-anchor="start">Chaves de andar, limites e parada</text>
+<text x="506" y="401" font-size="15" font-weight="700" fill="#49645d" text-anchor="start">STM32</text>
+<text x="603" y="401" font-size="15" font-weight="700" fill="#49645d" text-anchor="start">Função</text>
+<text x="826" y="401" font-size="15" font-weight="700" fill="#49645d" text-anchor="start">Contato</text>
+<text x="967" y="401" font-size="15" font-weight="700" fill="#49645d" text-anchor="start">COM</text>
+<text x="1058" y="401" font-size="15" font-weight="700" fill="#48555a" text-anchor="start">GND</text>
+<line x1="1080" y1="427" x2="1080" y2="607" stroke="#48555a" stroke-width="3"/>
+<rect x="505" y="412" width="77" height="30" rx="6" fill="#e8f3ee" stroke="none"/>
+<text x="543.5" y="433" font-size="16" font-weight="700" fill="#183832" text-anchor="middle">PA3</text>
+<text x="603" y="433" font-size="17" font-weight="400" fill="#183832" text-anchor="start">Térreo</text>
+<text x="828" y="433" font-size="16" font-weight="700" fill="#183832" text-anchor="start">NA</text>
+<path d="M582 427 H591 V440 H863 V427 H866" fill="none" stroke="#147963" stroke-width="2.5"/>
+<line x1="866" y1="427" x2="911" y2="427" stroke="#147963" stroke-width="2.5"/>
+<circle cx="911" cy="427" r="4" fill="#147963"/>
+<circle cx="985" cy="427" r="4" fill="#48555a"/>
+<line x1="985" y1="427" x2="1080" y2="427" stroke="#48555a" stroke-width="2.5"/>
+<circle cx="1080" cy="427" r="4" fill="#48555a"/>
+<line x1="985" y1="427" x2="914" y2="416" stroke="#48555a" stroke-width="2.5"/>
+<rect x="505" y="448" width="77" height="30" rx="6" fill="#e8f3ee" stroke="none"/>
+<text x="543.5" y="469" font-size="16" font-weight="700" fill="#183832" text-anchor="middle">PA4</text>
+<text x="603" y="469" font-size="17" font-weight="400" fill="#183832" text-anchor="start">1º andar</text>
+<text x="828" y="469" font-size="16" font-weight="700" fill="#183832" text-anchor="start">NA</text>
+<path d="M582 463 H591 V476 H863 V463 H866" fill="none" stroke="#147963" stroke-width="2.5"/>
+<line x1="866" y1="463" x2="911" y2="463" stroke="#147963" stroke-width="2.5"/>
+<circle cx="911" cy="463" r="4" fill="#147963"/>
+<circle cx="985" cy="463" r="4" fill="#48555a"/>
+<line x1="985" y1="463" x2="1080" y2="463" stroke="#48555a" stroke-width="2.5"/>
+<circle cx="1080" cy="463" r="4" fill="#48555a"/>
+<line x1="985" y1="463" x2="914" y2="452" stroke="#48555a" stroke-width="2.5"/>
+<rect x="505" y="484" width="77" height="30" rx="6" fill="#e8f3ee" stroke="none"/>
+<text x="543.5" y="505" font-size="16" font-weight="700" fill="#183832" text-anchor="middle">PA5</text>
+<text x="603" y="505" font-size="17" font-weight="400" fill="#183832" text-anchor="start">2º andar</text>
+<text x="828" y="505" font-size="16" font-weight="700" fill="#183832" text-anchor="start">NA</text>
+<path d="M582 499 H591 V512 H863 V499 H866" fill="none" stroke="#147963" stroke-width="2.5"/>
+<line x1="866" y1="499" x2="911" y2="499" stroke="#147963" stroke-width="2.5"/>
+<circle cx="911" cy="499" r="4" fill="#147963"/>
+<circle cx="985" cy="499" r="4" fill="#48555a"/>
+<line x1="985" y1="499" x2="1080" y2="499" stroke="#48555a" stroke-width="2.5"/>
+<circle cx="1080" cy="499" r="4" fill="#48555a"/>
+<line x1="985" y1="499" x2="914" y2="488" stroke="#48555a" stroke-width="2.5"/>
+<rect x="505" y="520" width="77" height="30" rx="6" fill="#e8f3ee" stroke="none"/>
+<text x="543.5" y="541" font-size="16" font-weight="700" fill="#183832" text-anchor="middle">PB0</text>
+<text x="603" y="541" font-size="17" font-weight="400" fill="#183832" text-anchor="start">Limite inferior</text>
+<text x="828" y="541" font-size="16" font-weight="700" fill="#183832" text-anchor="start">NF</text>
+<path d="M582 535 H591 V548 H863 V535 H866" fill="none" stroke="#147963" stroke-width="2.5"/>
+<line x1="866" y1="535" x2="911" y2="535" stroke="#147963" stroke-width="2.5"/>
+<circle cx="911" cy="535" r="4" fill="#147963"/>
+<circle cx="985" cy="535" r="4" fill="#48555a"/>
+<line x1="985" y1="535" x2="1080" y2="535" stroke="#48555a" stroke-width="2.5"/>
+<circle cx="1080" cy="535" r="4" fill="#48555a"/>
+<line x1="985" y1="535" x2="911" y2="535" stroke="#48555a" stroke-width="2.5"/>
+<rect x="505" y="556" width="77" height="30" rx="6" fill="#e8f3ee" stroke="none"/>
+<text x="543.5" y="577" font-size="16" font-weight="700" fill="#183832" text-anchor="middle">PB1</text>
+<text x="603" y="577" font-size="17" font-weight="400" fill="#183832" text-anchor="start">Limite superior</text>
+<text x="828" y="577" font-size="16" font-weight="700" fill="#183832" text-anchor="start">NF</text>
+<path d="M582 571 H591 V584 H863 V571 H866" fill="none" stroke="#147963" stroke-width="2.5"/>
+<line x1="866" y1="571" x2="911" y2="571" stroke="#147963" stroke-width="2.5"/>
+<circle cx="911" cy="571" r="4" fill="#147963"/>
+<circle cx="985" cy="571" r="4" fill="#48555a"/>
+<line x1="985" y1="571" x2="1080" y2="571" stroke="#48555a" stroke-width="2.5"/>
+<circle cx="1080" cy="571" r="4" fill="#48555a"/>
+<line x1="985" y1="571" x2="911" y2="571" stroke="#48555a" stroke-width="2.5"/>
+<rect x="505" y="592" width="77" height="30" rx="6" fill="#e8f3ee" stroke="none"/>
+<text x="543.5" y="613" font-size="16" font-weight="700" fill="#183832" text-anchor="middle">PB10</text>
+<text x="603" y="613" font-size="17" font-weight="400" fill="#183832" text-anchor="start">Parada</text>
+<text x="828" y="613" font-size="16" font-weight="700" fill="#183832" text-anchor="start">NF</text>
+<path d="M582 607 H591 V620 H863 V607 H866" fill="none" stroke="#147963" stroke-width="2.5"/>
+<line x1="866" y1="607" x2="911" y2="607" stroke="#147963" stroke-width="2.5"/>
+<circle cx="911" cy="607" r="4" fill="#147963"/>
+<circle cx="985" cy="607" r="4" fill="#48555a"/>
+<line x1="985" y1="607" x2="1080" y2="607" stroke="#48555a" stroke-width="2.5"/>
+<circle cx="1080" cy="607" r="4" fill="#48555a"/>
+<line x1="985" y1="607" x2="911" y2="607" stroke="#48555a" stroke-width="2.5"/>
+<text x="506" y="648" font-size="16" font-weight="400" fill="#183832" text-anchor="start">Em cada chave, COM vai ao GND e NA ou NF ao pino indicado.</text>
+<text x="506" y="672" font-size="16" font-weight="400" fill="#49645d" text-anchor="start">Desenho em repouso. Cada entrada usa o pull-up interno da placa.</text>
+<rect x="26" y="713" width="1108" height="271" rx="14" fill="#ffffff" stroke="#c8d7d0"/>
+<text x="48" y="752" font-size="16" font-weight="700" fill="#147963" text-anchor="start">04</text>
+<text x="87" y="752" font-size="24" font-weight="700" fill="#183832" text-anchor="start">LCD 1602 com backpack PCF8574T</text>
+<text x="53" y="786" font-size="16" font-weight="700" fill="#49645d" text-anchor="start">STM32</text>
+<text x="425" y="786" font-size="17" font-weight="700" fill="#49645d" text-anchor="start">Conversor I²C bidirecional</text>
+<text x="923" y="786" font-size="17" font-weight="700" fill="#49645d" text-anchor="start">Backpack • 0x27</text>
+<rect x="378" y="799" width="408" height="123" rx="9" fill="#f0f5f2" stroke="#c8d7d0"/>
+<rect x="54" y="803" width="110" height="30" rx="6" fill="#e8f3ee" stroke="none"/>
+<text x="109" y="824" font-size="16" font-weight="700" fill="#183832" text-anchor="middle">PB6</text>
+<line x1="164" y1="818" x2="375" y2="818" stroke="#147963" stroke-width="2.5"/>
+<circle cx="375" cy="818" r="4" fill="#147963"/>
+<text x="398" y="824" font-size="17" font-weight="700" fill="#147963" text-anchor="start">LV1</text>
+<text x="726" y="824" font-size="17" font-weight="700" fill="#147963" text-anchor="start">HV1</text>
+<line x1="449" y1="818" x2="706" y2="818" stroke="#7f9b91" stroke-width="1.5" stroke-dasharray="5 4"/>
+<line x1="787" y1="818" x2="924" y2="818" stroke="#147963" stroke-width="2.5"/>
+<circle cx="788" cy="818" r="4" fill="#147963"/>
+<rect x="924" y="803" width="154" height="30" rx="6" fill="#e8f3ee" stroke="none"/>
+<text x="1001" y="824" font-size="16" font-weight="700" fill="#183832" text-anchor="middle">SCL</text>
+<rect x="54" y="843" width="110" height="30" rx="6" fill="#e8f3ee" stroke="none"/>
+<text x="109" y="864" font-size="16" font-weight="700" fill="#183832" text-anchor="middle">PB7</text>
+<line x1="164" y1="858" x2="375" y2="858" stroke="#147963" stroke-width="2.5"/>
+<circle cx="375" cy="858" r="4" fill="#147963"/>
+<text x="398" y="864" font-size="17" font-weight="700" fill="#147963" text-anchor="start">LV2</text>
+<text x="726" y="864" font-size="17" font-weight="700" fill="#147963" text-anchor="start">HV2</text>
+<line x1="449" y1="858" x2="706" y2="858" stroke="#7f9b91" stroke-width="1.5" stroke-dasharray="5 4"/>
+<line x1="787" y1="858" x2="924" y2="858" stroke="#147963" stroke-width="2.5"/>
+<circle cx="788" cy="858" r="4" fill="#147963"/>
+<rect x="924" y="843" width="154" height="30" rx="6" fill="#e8f3ee" stroke="none"/>
+<text x="1001" y="864" font-size="16" font-weight="700" fill="#183832" text-anchor="middle">SDA</text>
+<rect x="54" y="883" width="110" height="30" rx="6" fill="#e8f3ee" stroke="none"/>
+<text x="109" y="904" font-size="16" font-weight="700" fill="#183832" text-anchor="middle">3V3</text>
+<line x1="164" y1="898" x2="375" y2="898" stroke="#a8490f" stroke-width="2.5"/>
+<circle cx="375" cy="898" r="4" fill="#a8490f"/>
+<text x="398" y="904" font-size="17" font-weight="700" fill="#a8490f" text-anchor="start">LV</text>
+<text x="726" y="904" font-size="17" font-weight="700" fill="#8a3682" text-anchor="start">HV</text>
+<line x1="787" y1="898" x2="924" y2="898" stroke="#8a3682" stroke-width="2.5"/>
+<circle cx="788" cy="898" r="4" fill="#8a3682"/>
+<rect x="924" y="883" width="154" height="30" rx="6" fill="#e8f3ee" stroke="none"/>
+<text x="1001" y="904" font-size="16" font-weight="700" fill="#183832" text-anchor="middle">VCC • 5 V</text>
+<text x="53" y="947" font-size="17" font-weight="400" fill="#183832" text-anchor="start">Ligue HV e VCC do LCD ao trilho de 5 V. Ligue GND do conversor e do LCD ao GND comum.</text>
+<text x="53" y="971" font-size="16" font-weight="400" fill="#49645d" text-anchor="start">Confira os pull-ups I²C em cada lado e meça SCL/SDA em repouso antes de ligar ao STM32: LV ≈ 3,3 V; HV ≈ 5 V.</text>
+<rect x="26" y="1004" width="1108" height="174" rx="14" fill="#ffffff" stroke="#c8d7d0"/>
+<text x="48" y="1043" font-size="16" font-weight="700" fill="#147963" text-anchor="start">05</text>
+<text x="87" y="1043" font-size="24" font-weight="700" fill="#183832" text-anchor="start">Pontos de prova • ponte e motor fora da protoboard</text>
+<rect x="55" y="1073" width="70" height="30" rx="6" fill="#e8f3ee" stroke="none"/>
+<text x="90" y="1094" font-size="16" font-weight="700" fill="#183832" text-anchor="middle">PA8</text>
+<line x1="125" y1="1088" x2="160" y2="1088" stroke="#147963" stroke-width="2.5"/>
+<circle cx="160" cy="1088" r="4" fill="#147963"/>
+<text x="172" y="1095" font-size="17" font-weight="700" fill="#183832" text-anchor="start">PWMA</text>
+<text x="55" y="1126" font-size="16" font-weight="400" fill="#183832" text-anchor="start">PWM de 20 kHz em viagem</text>
+<rect x="325" y="1073" width="70" height="30" rx="6" fill="#e8f3ee" stroke="none"/>
+<text x="360" y="1094" font-size="16" font-weight="700" fill="#183832" text-anchor="middle">PB12</text>
+<line x1="395" y1="1088" x2="430" y2="1088" stroke="#147963" stroke-width="2.5"/>
+<circle cx="430" cy="1088" r="4" fill="#147963"/>
+<text x="442" y="1095" font-size="17" font-weight="700" fill="#183832" text-anchor="start">AIN1</text>
+<text x="325" y="1126" font-size="16" font-weight="400" fill="#183832" text-anchor="start">alto na subida</text>
+<rect x="595" y="1073" width="70" height="30" rx="6" fill="#e8f3ee" stroke="none"/>
+<text x="630" y="1094" font-size="16" font-weight="700" fill="#183832" text-anchor="middle">PB13</text>
+<line x1="665" y1="1088" x2="700" y2="1088" stroke="#147963" stroke-width="2.5"/>
+<circle cx="700" cy="1088" r="4" fill="#147963"/>
+<text x="712" y="1095" font-size="17" font-weight="700" fill="#183832" text-anchor="start">AIN2</text>
+<text x="595" y="1126" font-size="16" font-weight="400" fill="#183832" text-anchor="start">alto na descida</text>
+<rect x="865" y="1073" width="70" height="30" rx="6" fill="#e8f3ee" stroke="none"/>
+<text x="900" y="1094" font-size="16" font-weight="700" fill="#183832" text-anchor="middle">PB14</text>
+<line x1="935" y1="1088" x2="970" y2="1088" stroke="#147963" stroke-width="2.5"/>
+<circle cx="970" cy="1088" r="4" fill="#147963"/>
+<text x="982" y="1095" font-size="17" font-weight="700" fill="#183832" text-anchor="start">STBY</text>
+<text x="865" y="1126" font-size="16" font-weight="400" fill="#183832" text-anchor="start">baixo em todo o ensaio</text>
+<text x="53" y="1158" font-size="17" font-weight="400" fill="#49645d" text-anchor="start">Conecte o GND do instrumento ao GND comum. Deixe a alimentação VM e os terminais do motor sem ligação.</text>
+<rect x="26" y="1197" width="1108" height="167" rx="14" fill="#ffffff" stroke="#c8d7d0"/>
+<text x="48" y="1236" font-size="16" font-weight="700" fill="#147963" text-anchor="start">06</text>
+<text x="87" y="1236" font-size="24" font-weight="700" fill="#183832" text-anchor="start">Percurso manual • térreo → 2º → térreo</text>
+<text x="53" y="1266" font-size="17" font-weight="400" fill="#183832" text-anchor="start">1. Feche os três NF. Mantenha o contato do térreo fechado. Segure SW por mais de 1 s e solte para referenciar.</text>
+<text x="53" y="1296" font-size="17" font-weight="400" fill="#183832" text-anchor="start">2. Selecione o 2º com duas excursões e clique. Solte o térreo, acione e solte o 1º, depois mantenha o 2º fechado.</text>
+<text x="53" y="1326" font-size="17" font-weight="400" fill="#183832" text-anchor="start">3. Selecione o térreo e confirme. Solte o 2º, passe pelo 1º e mantenha o térreo fechado. Acione só um andar por vez.</text>
+<text x="53" y="1350" font-size="16" font-weight="700" fill="#147963" text-anchor="start">No USB, floors vale 1 no térreo, 2 no 1º e 4 no 2º. Entre andares, vale 0.</text>
+<text x="32" y="1396" font-size="17" font-weight="700" fill="#183832" text-anchor="start">Programação e diagnóstico</text>
+<text x="265" y="1396" font-size="16" font-weight="400" fill="#183832" text-anchor="start">PA13 / SWDIO e PA14 / SWCLK para ST-LINK. Use o conector USB da placa para o log.</text>
+<text x="32" y="1424" font-size="17" font-weight="700" fill="#183832" text-anchor="start">Opcionais</text>
+<text x="133" y="1424" font-size="16" font-weight="400" fill="#183832" text-anchor="start">PC13 usa o LED da placa quando disponível. PB5 sinaliza falha e pode ficar livre neste ensaio.</text>
+</svg>
