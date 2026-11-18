@@ -1,0 +1,79 @@
+# Protótipo mecânico com estrutura toda impressa
+
+Segunda proposta de estrutura para o mini elevador de três andares, sem varões nem barras: a torre é uma coluna impressa em dois segmentos, com trilhos em cauda de andorinha onde a cabine corre. Modelo de 18/11/2026, **ainda não impresso nem montado**. A primeira proposta, com três varões de 8 mm, está em [mecanica/](../mecanica/README.md).
+
+| Vista frontal | Vista de trás | Motor sob o teto |
+|---|---|---|
+| ![Montagem vista de frente](img/montagem.png) | ![Montagem vista de trás](img/montagem_fundo.png) | ![Detalhe da cabeça](img/cabeca_detalhe.png) |
+
+## O que continua sendo comprado
+
+A estrutura é toda impressa. Ainda é preciso ter:
+
+- 1 motor TT com redução e eixo de dois chanfros.
+- 5 microchaves pequenas com alavanca de rolete, tipo KW12.
+- Cerca de 1 m de linha fina e resistente.
+- Parafusos: 2 M3 × 25 (motor), 8 M3 × 8 (coluna na base, na emenda e na cabeça), 5 M3 × 8 (grampos), 10 M2 × 12 com porca (microchaves) e 1 parafuso pequeno para a ponta do eixo.
+
+Os M3 abrem rosca direto no plástico, sem porca.
+
+## Como funciona
+
+- **Coluna.** Dois segmentos iguais de 195 mm, com 100 mm de largura e dois trilhos na frente. Uma emenda parafusada nas costas une os dois. A torre montada tem 400 mm.
+- **Base e cabeça.** Cada uma tem um encaixe com o formato da coluna e dos trilhos, travado por dois parafusos pelas costas.
+- **Acionamento.** O motor TT fica deitado sob o teto, parafusado na frente do encaixe da cabeça. O tambor de 20 mm fica no eixo e o fio desce direto até a alça da cabine.
+- **Cabine.** Tem quatro sapatas atrás que abraçam os trilhos. Fica em balanço na frente da coluna.
+- **Sensores.** A cabine tem um ressalto em cada lateral. Cada microchave fica num grampo que prende na borda da coluna e desliza na altura. Três grampos na borda direita marcam os andares; dois na esquerda, virados de cabeça para baixo, são os fins de curso.
+- **Percurso.** 110 mm entre andares, 220 mm no total, com 14 mm de folga abaixo do térreo e 27 mm acima do 2º andar.
+
+## Peças para imprimir
+
+| Arquivo | Qtde | Tamanho (mm) | Posição na mesa |
+|---|---|---|---|
+| [stl/gabarito.stl](stl/gabarito.stl) | 1 | 64 × 105 × 19 | Como está. **Imprimir primeiro.** |
+| [stl/segmento.stl](stl/segmento.stl) | 2 | 100 × 195 × 19 | Costas na mesa, trilhos para cima |
+| [stl/base.stl](stl/base.stl) | 1 | 170 × 130 × 25 | Placa na mesa |
+| [stl/cabeca.stl](stl/cabeca.stl) | 1 | 116 × 81 × 30 | Teto na mesa (o STL já vem virado) |
+| [stl/emenda.stl](stl/emenda.stl) | 1 | 80 × 80 × 10 | Face lisa na mesa |
+| [stl/cabine.stl](stl/cabine.stl) | 1 | 80 × 63 × 83 | Piso na mesa |
+| [stl/grampo.stl](stl/grampo.stl) | 5 | 16 × 39 × 26 | Como está |
+| [stl/tambor.stl](stl/tambor.stl) | 1 | Ø28 × 14 | Flange reta na mesa |
+
+Todas cabem numa mesa de 220 × 220 mm e foram desenhadas para imprimir sem suportes. Sugestão de partida: PLA, camada de 0,2 mm, 3 perímetros, 20% de preenchimento. O segmento ocupa quase toda a mesa no comprimento; use aba (brim) se as pontas levantarem, porque empeno nos trilhos faz a cabine prender.
+
+## Antes de imprimir tudo
+
+O gabarito tem quatro pedaços e testa os encaixes de que o projeto depende:
+
+1. **Trilho e sapata.** A sapata deve correr pelo trecho de trilho com o próprio peso, sem folga lateral perceptível. Este é o teste mais importante.
+2. **Barra.** O eixo do motor deve entrar firme no furo de dois chanfros. Um M3 deve passar no segundo furo e abrir rosca no terceiro. Um M2 deve passar no quarto. A fenda na ponta deve entrar justa na espessura do trecho de coluna.
+3. **Chapa.** O furo grande e os dois pequenos devem coincidir com o eixo e os furos de fixação do motor real.
+
+Se algo não servir, ajuste os parâmetros no começo de [elevador_impresso.scad](elevador_impresso.scad) (`fit_slide`, `fit_sock`, `tt_flat`, `tt_hole_dx`, `tt_hole_sp`, `sw_hole_sp`) e gere de novo com `.\gerar.ps1`.
+
+## Montagem
+
+1. Encaixe um segmento na base e trave com dois M3 pelas costas.
+2. Apoie o segundo segmento sobre o primeiro e parafuse a emenda nas costas com quatro M3. Passe o dedo nos trilhos sobre a junção; se houver degrau, lixe até ficar liso.
+3. Coloque os cinco grampos nas bordas da coluna, sem apertar.
+4. Enfie a cabine nos trilhos por cima. Ela deve descer sozinha até a base.
+5. Parafuse o motor na cabeça com os dois M3 × 25, encaixe o tambor e prenda a cabeça no topo da coluna com dois M3.
+6. Amarre o fio no furo do tambor e na alça da cabine, com a cabine apoiada na base. Enrole de modo que o fio desça pelo lado do centro da torre.
+7. Com a cabine no nível de cada andar, deslize o grampo até a microchave clicar no meio do ressalto e aperte o parafuso. Ponha os fins de curso cerca de 8 mm além do térreo e do 2º andar. Os rasgos da aba ajustam a distância da microchave ao ressalto.
+
+## Comparação com a versão de varões
+
+| | Varões ([mecanica/](../mecanica/README.md)) | Toda impressa (esta) |
+|---|---|---|
+| Material comprado para a estrutura | 3 varões de 8 mm | Nenhum |
+| Atrito esperado na cabine | Menor: furo impresso em aço liso | Maior: plástico em plástico |
+| Sensível a empeno da impressão | Pouco | Sim, nos trilhos e na junção |
+| Ajuste dos sensores | Altura e giro | Altura e rasgos |
+
+## O que falta verificar
+
+- **Deslizamento.** O atrito de plástico com plástico e o degrau na junção dos segmentos são o maior risco desta versão. Só o gabarito e a impressão dizem se a folga de 0,35 mm serve.
+- **Cabine em balanço.** O fio puxa perto do centro da cabine, mas uma carga na frente pode inclinar a cabine e aumentar o atrito nas sapatas.
+- **Cotas do motor TT e da microchave.** Valores nominais, não medidos, como na outra versão.
+- **Torque e retenção sem energia.** Mesma situação da outra versão, com atrito maior a favor da retenção e contra a subida.
+- **Suporte da eletrônica.** Ainda não modelado; a base tem quatro furos para fixar numa tábua.

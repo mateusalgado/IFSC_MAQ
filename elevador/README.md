@@ -43,6 +43,7 @@ indefinido. Não usar `-DNDEBUG`, pois os testes empregam `assert`.
 - [Montagem, calibração e roteiro de bancada](docs/BANCADA.md).
 - [Evidências e limites da validação](docs/VALIDACAO.md).
 - [Protótipo mecânico para impressão 3D](mecanica/README.md).
+- [Protótipo mecânico com estrutura toda impressa](mecanica-impressa/README.md).
 
 ## Organização
 
