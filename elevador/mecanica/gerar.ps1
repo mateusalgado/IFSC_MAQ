@@ -7,7 +7,7 @@ $dir = Split-Path -Parent $MyInvocation.MyCommand.Path
 $scad = Join-Path $dir "elevador.scad"
 New-Item -ItemType Directory -Force (Join-Path $dir "stl"), (Join-Path $dir "img") | Out-Null
 
-foreach ($p in "base", "topo", "cabine", "bracadeira", "tambor", "gabarito") {
+foreach ($p in "base", "topo", "cabine", "porta", "bracadeira", "tambor", "gabarito") {
     Write-Host "STL: $p"
     & $OpenScad -o (Join-Path $dir "stl\$p.stl") -D ('part=\"{0}\"' -f $p) $scad
     if ($LASTEXITCODE -ne 0) { throw "Falha ao gerar $p" }
@@ -18,3 +18,6 @@ Write-Host "Imagem: montagem"
 & $OpenScad -o (Join-Path $dir "img\montagem.png") -D 'part=\"montagem\"' --imgsize=1000,1400 --camera=0,15,205,68,0,28,1250 --colorscheme=Tomorrow $scad
 & $OpenScad -o (Join-Path $dir "img\montagem_fundo.png") -D 'part=\"montagem\"' --imgsize=1000,1400 --camera=0,15,205,68,0,150,1250 --colorscheme=Tomorrow $scad
 & $OpenScad -o (Join-Path $dir "img\topo_detalhe.png") -D 'part=\"montagem\"' --imgsize=1100,800 --camera=0,20,380,55,0,160,420 --colorscheme=Tomorrow $scad
+$m = 'part=\"montagem\"'
+& $OpenScad -o (Join-Path $dir "img\porta_aberta.png") -D $m --imgsize=1100,800 --camera=5,-30,190,65,0,325,460 --colorscheme=Tomorrow $scad
+& $OpenScad -o (Join-Path $dir "img\porta_fechada.png") -D $m -D "porta_aberta=false" --imgsize=1100,800 --camera=5,-30,190,65,0,325,460 --colorscheme=Tomorrow $scad

@@ -9,6 +9,7 @@ RawInputs board_read_inputs(void) {
     return (RawInputs){.joystick = 2048, .valid = false};
 }
 void board_motor_write(MotorOutput output) { (void)output; }
+void board_door_write(bool open) { (void)open; }
 void board_indicators(ElState state) { (void)state; }
 void board_lcd_write(const char *row0, const char *row1) { (void)row0; (void)row1; }
 void board_fault_disable(void) { }

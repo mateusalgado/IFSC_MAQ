@@ -2,14 +2,14 @@
 
 # Mini elevador didático de três andares
 
-## Máquinas e Acionamentos · Controle de uma cabine com STM32F411 e FreeRTOS
+## Máquinas e Acionamentos · Cabine com motor CC e porta com servomotor, STM32F411 e FreeRTOS
 
 > Aluno: Mateus Salgado Barboza Costa  
 > Instituto Federal de Santa Catarina · 04/11/2026
 
-A cabine atende térreo, primeiro e segundo andar. O operador escolhe um destino pelo joystick e acompanha a viagem no LCD. O experimento de MAQ compara como carga e sentido afetam corrente, tempo e deslocamento após a detecção do andar.
+A cabine atende térreo, primeiro e segundo andar. O projeto usa dois tipos de motor: um motor CC com redução sobe e desce a cabine, e um servomotor abre e fecha a porta. O operador escolhe um destino pelo joystick e acompanha a viagem no LCD. O experimento de MAQ compara como carga e sentido afetam corrente, tempo e deslocamento após a detecção do andar.
 
-**Para montar agora:** siga o [passo a passo do colega](docs/INSTRUCOES_COLEGA.md), desde o download até a montagem, gravação e percurso com chaves manuais. O [HEX de bancada pronto](firmware/kit-bancada/README.md) acompanha o repositório. Nesse perfil os sinais PWM e direção chegam aos pontos de medição e STBY permanece baixo. O fechamento da mecânica e da alimentação está na [ficha da etapa 2](docs/FICHA_LEVANTAMENTO_ETAPA_2.md).
+**Para montar agora:** siga o [passo a passo do colega](docs/INSTRUCOES_COLEGA.md), desde o download até a montagem, gravação e percurso com chaves manuais. O [HEX de bancada pronto](firmware/kit-bancada/README.md) acompanha o repositório. Nesse perfil os sinais PWM e direção chegam aos pontos de medição, STBY permanece baixo e o sinal do servo da porta sai em PB8. O fechamento da mecânica e da alimentação está na [ficha da etapa 2](docs/FICHA_LEVANTAMENTO_ETAPA_2.md).
 
 <p align="center"><strong>SUMÁRIO</strong></p>
 
@@ -42,6 +42,7 @@ indefinido. Não usar `-DNDEBUG`, pois os testes empregam `assert`.
 - [Componentes, pinagem provisória e decisões pendentes](docs/HARDWARE.md).
 - [Montagem, calibração e roteiro de bancada](docs/BANCADA.md).
 - [Evidências e limites da validação](docs/VALIDACAO.md).
+- [Validação da porta com servomotor, 18/11/2026](docs/VALIDACAO_PORTA_2026-11-18.md).
 - [Protótipo mecânico para impressão 3D](mecanica/README.md).
 - [Protótipo mecânico com estrutura toda impressa](mecanica-impressa/README.md).
 
@@ -61,15 +62,19 @@ docs/                 Relatório, montagem, decisões e evidências
 1. Após ligar, o motor permanece inativo. Soltar o botão antes de usá-lo.
 2. Segurar o botão do joystick por pelo menos 1 s e soltar para iniciar referência.
 3. A cabine desce com comando limitado até confirmar o sensor do térreo.
-4. Com a cabine parada, mover o joystick uma vez para selecionar o andar;
+4. Ao confirmar a chegada, a porta abre e fica aberta enquanto a cabine está parada.
+5. Com a cabine parada, mover o joystick uma vez para selecionar o andar;
    voltar ao centro antes de outra seleção. Clique curto confirma.
-5. Pedidos durante referência, viagem ou chegada são recusados e descartados.
-6. Em falha, corrigir a causa, liberar a parada/limites e segurar/soltar para
-   reconhecer. Isso retorna à inicialização sem movimento. Uma nova ação longa
-   solicita outra referência. O destino anterior não é retomado.
+6. A porta fecha e, 0,8 s depois, a viagem começa. O motor da cabine nunca
+   recebe comando com a porta comandada aberta.
+7. Pedidos durante referência, fechamento, viagem ou chegada são recusados e descartados.
+8. Em falha, a porta fica onde estava. Corrigir a causa, liberar a parada/limites e
+   segurar/soltar para reconhecer. Isso fecha a porta e retorna à inicialização sem
+   mover a cabine. Uma nova ação longa solicita outra referência. O destino anterior
+   não é retomado.
 
 O LCD alterna informação de último andar confirmado/destino com “entre andares”.
-PWM é percentual de comando, não velocidade medida. A primeira versão para no
+O servo da porta não tem sensor: “fechada” significa comandada fechada há 0,8 s. PWM é percentual de comando, não velocidade medida. A primeira versão para no
 sensor, em movimento lento; não estima distância contínua nem desaceleração precisa.
 
 ## Dependências e preservação

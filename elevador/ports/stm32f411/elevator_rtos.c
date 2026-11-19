@@ -27,12 +27,14 @@ static void control_task(void *arg) {
     TickType_t wake = xTaskGetTickCount();
     controller_init(&controller, now);
     board_motor_write(controller.elevator.motor.out);
+    board_door_write(controller.elevator.door_open);
     for (;;) {
         now = HAL_GetTick();
         RawInputs raw = board_read_inputs();
         controller_step(&controller, &raw, now);
         const Elevator e = controller.elevator;
         board_motor_write(e.motor.out);
+        board_door_write(e.door_open);
         board_indicators(e.state);
         Snapshot snapshot = {e, now, dropped, raw};
         (void)xQueueOverwrite(display_queue, &snapshot);
@@ -75,11 +77,11 @@ static void log_task(void *arg) {
         taskEXIT_CRITICAL();
         if (!available) { ++usb_dropped; continue; }
         int len = snprintf((char *)tx, sizeof tx,
-            "ms=%lu state=%s fault=%s last=%d dest=%d pwm=%u notice=%u lost=%lu usb_lost=%lu "
+            "ms=%lu state=%s fault=%s last=%d dest=%d pwm=%u door=%u notice=%u lost=%lu usb_lost=%lu "
             "adc=%u btn=%u floors=%u low=%u high=%u stop=%u valid=%u\r\n",
             (unsigned long)s.now, elevator_state_name(s.elevator.state),
             elevator_fault_name(s.elevator.fault), s.elevator.last_floor,
-            s.elevator.destination, s.elevator.motor.out.pwm / 10u,
+            s.elevator.destination, s.elevator.motor.out.pwm / 10u, (unsigned)s.elevator.door_open,
             (unsigned)s.elevator.notice, (unsigned long)s.dropped, (unsigned long)usb_dropped,
             (unsigned)s.raw.joystick, (unsigned)s.raw.button, (unsigned)s.raw.floors,
             (unsigned)s.raw.lower_limit, (unsigned)s.raw.upper_limit, (unsigned)s.raw.stop,

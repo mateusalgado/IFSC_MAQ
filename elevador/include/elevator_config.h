@@ -10,6 +10,7 @@
 #define EL_TRAVEL_TIMEOUT_MS 20000u
 #define EL_DEPART_TIMEOUT_MS 2000u
 #define EL_ARRIVAL_MS 300u
+#define EL_DOOR_MS 800u /* servo travel allowance; the door has no sensor */
 #define EL_NOTICE_MS 1500u
 #ifndef KIT_POWER_COMMISSIONED
 #define EL_PWM_MAX 300u /* permille, command only; NOT measured speed */

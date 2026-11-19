@@ -10,6 +10,15 @@ static void state(Elevator *e, ElState next, uint32_t now) {
 static void notice(Elevator *e, ElNotice n, uint32_t now) {
     e->notice = n; e->notice_ms = now; ++e->revision;
 }
+/* The door servo has no feedback: "closed" means commanded closed for long
+ * enough to finish its travel. The hoist motor may only run in that condition. */
+static void door(Elevator *e, bool open, uint32_t now) {
+    if (e->door_open != open) { e->door_open = open; e->door_ms = now; ++e->revision; }
+}
+static bool door_closed(const Elevator *e, uint32_t now) {
+    return !e->door_open && (uint32_t)(now - e->door_ms) >= EL_DOOR_MS;
+}
+/* A fault freezes the door where it was commanded; only recognition closes it. */
 static void fail(Elevator *e, ElFault f, uint32_t now) {
     motor_stop(&e->motor, now, MOTOR_FAULT);
     if (e->state != EL_FAULT) {
@@ -20,7 +29,7 @@ static void fail(Elevator *e, ElFault f, uint32_t now) {
 void elevator_init(Elevator *e, uint32_t now) {
     memset(e, 0, sizeof *e);
     e->last_floor = e->current_floor = e->destination = -1;
-    e->last_ms = e->state_ms = now;
+    e->last_ms = e->state_ms = e->door_ms = now;
     motor_init(&e->motor, now);
 }
 static void arrive(Elevator *e, uint32_t now) {
@@ -43,18 +52,29 @@ static void homing(Elevator *e, InputEvent event, uint32_t now) {
         fail(e, FAULT_HOME_TIMEOUT, now); return;
     }
     if (e->current_floor == 0) { arrive(e, now); return; }
+    if (!door_closed(e, now)) { motor_stop(&e->motor, now, MOTOR_NORMAL); return; }
     motor_step(&e->motor, now, -1, EL_PWM_HOME);
 }
 static void idle(Elevator *e, InputEvent event, uint32_t now) {
     if (e->current_floor != e->last_floor || !e->referenced) {
         fail(e, FAULT_POSITION, now); return;
     }
+    door(e, true, now);
     if (event == EV_UP && e->selection < 2) { ++e->selection; ++e->revision; }
     if (event == EV_DOWN && e->selection > 0) { --e->selection; ++e->revision; }
     if (event == EV_CONFIRM) {
         if (e->selection == e->current_floor) { notice(e, NOTICE_SAME_FLOOR, now); return; }
-        e->destination = e->selection; e->floor_ms = now;
+        e->destination = e->selection;
         e->notice = NOTICE_NONE;
+        door(e, false, now);
+        state(e, EL_CLOSING, now);
+    }
+}
+static void closing(Elevator *e, InputEvent event, uint32_t now) {
+    if (event != EV_NONE) notice(e, NOTICE_BUSY, now);
+    if (e->current_floor != e->last_floor) { fail(e, FAULT_POSITION, now); return; }
+    if (door_closed(e, now)) {
+        e->floor_ms = now;
         state(e, e->destination > e->current_floor ? EL_UP : EL_DOWN, now);
     }
 }
@@ -63,6 +83,7 @@ static void moving(Elevator *e, InputEvent event, uint32_t now) {
     if ((uint32_t)(now - e->state_ms) >= EL_TRAVEL_TIMEOUT_MS) {
         fail(e, FAULT_TRAVEL_TIMEOUT, now); return;
     }
+    if (!door_closed(e, now)) { fail(e, FAULT_DOOR, now); return; }
     int direction = e->state == EL_UP ? 1 : -1;
     if (e->current_floor >= 0 && e->current_floor != e->last_floor) {
         if (e->current_floor != e->last_floor + direction) {
@@ -87,13 +108,14 @@ static void arrival(Elevator *e, InputEvent event, uint32_t now) {
 static void faulted(Elevator *e, InputEvent event, uint32_t now) {
     if (event == EV_LONG) {
         e->fault = FAULT_NONE;
+        door(e, false, now);
         /* Recognition never starts motion. A second, separate long press homes. */
         state(e, EL_INIT, now);
     }
 }
 void elevator_step(Elevator *e, const Sensors *s, InputEvent event, uint32_t now) {
     static const Handler handlers[EL_STATE_COUNT] = {
-        initializing, homing, idle, moving, moving, arrival, faulted
+        initializing, homing, idle, closing, moving, moving, arrival, faulted
     };
     uint32_t dt = now - e->last_ms; e->last_ms = now;
     e->current_floor = floor_number(s->floors);
@@ -113,10 +135,10 @@ void elevator_step(Elevator *e, const Sensors *s, InputEvent event, uint32_t now
     handlers[e->state](e, event, now);
 }
 const char *elevator_state_name(ElState s) {
-    static const char *const names[] = {"INICIO", "REFERENCIA", "PARADO", "SUBIDA", "DESCIDA", "CHEGADA", "FALHA"};
+    static const char *const names[] = {"INICIO", "REFERENCIA", "PARADO", "FECHANDO", "SUBIDA", "DESCIDA", "CHEGADA", "FALHA"};
     return (unsigned)s < EL_STATE_COUNT ? names[s] : "INVALIDO";
 }
 const char *elevator_fault_name(ElFault f) {
-    static const char *const names[] = {"nenhuma", "parada", "fim_curso", "sensor", "tempo_ref", "tempo_viagem", "posicao", "entrada", "prazo_controle"};
+    static const char *const names[] = {"nenhuma", "parada", "fim_curso", "sensor", "tempo_ref", "tempo_viagem", "posicao", "entrada", "prazo_controle", "porta"};
     return (unsigned)f < sizeof names / sizeof names[0] ? names[f] : "invalida";
 }

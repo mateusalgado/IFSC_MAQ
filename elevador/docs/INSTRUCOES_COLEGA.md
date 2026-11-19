@@ -73,7 +73,7 @@ Cada chave tem seu próprio fio de sinal. Todas compartilham o GND. O firmware h
 | HV do conversor e VCC do LCD | Trilho 5 V LCD |
 | GND do conversor e do LCD | Trilho GND |
 
-O backpack assumido pelo código usa P0=RS, P1=RW, P2=E, P3=luz e P4–P7=D4–D7. Confira **PCF8574T e endereço 0x27** no módulo. Deixe PA8, PB12, PB13 e PB14 apenas como pontos de prova. PB5 pode ficar livre e PC13 usa o LED da própria placa, quando presente.
+O backpack assumido pelo código usa P0=RS, P1=RW, P2=E, P3=luz e P4–P7=D4–D7. Confira **PCF8574T e endereço 0x27** no módulo. Deixe PA8, PB12, PB13 e PB14 apenas como pontos de prova. PB8 leva o sinal do servo da porta e também pode ficar só como ponto de prova. PB5 pode ficar livre e PC13 usa o LED da própria placa, quando presente.
 
 Antes de conectar SCL e SDA ao STM32, energize as alimentações e confira no multímetro aproximadamente **3,3 V no lado LV** e **5 V no lado HV**, com o barramento em repouso. Depois desligue, complete as ligações e confira a ausência de curto entre os trilhos.
 
@@ -115,9 +115,9 @@ Os registros aparecem nas mudanças de estado e periodicamente. Para observar um
 
 Use a sequência abaixo com os contatos NF fechados. A chave do andar atual deve ficar fechada enquanto a cabine simulada estiver parada.
 
-1. **Referência no térreo.** Feche T e deixe 1 e 2 abertos. Solte SW antes de começar. Segure SW por mais de 1 s e solte. O estado passa pela referência e chegada até **PARADO**, com último andar 0.
+1. **Referência no térreo.** Feche T e deixe 1 e 2 abertos. Solte SW antes de começar. Segure SW por mais de 1 s e solte. O estado passa pela referência e chegada até **PARADO**, com último andar 0. Nesse momento a porta abre (`door=1` no terminal).
 2. **Seleção do 2º.** Mova o joystick para cima, volte ao centro, mova para cima outra vez e volte ao centro. Confira seleção 2 no LCD. Dê um clique curto em SW.
-3. **Saída do térreo.** Quando aparecer SUBIDA, abra T em menos de **2 s**.
+3. **Saída do térreo.** Depois do clique o LCD mostra “Fechando porta” por 0,8 s. Mantenha T fechado nesse tempo. Quando aparecer SUBIDA, abra T em menos de **2 s**.
 4. **Passagem pelo 1º.** Feche 1 por cerca de **0,2 s** e abra novamente.
 5. **Chegada ao 2º.** Feche 2 e mantenha fechado. Faça a viagem inteira em menos de **20 s**. O comando PWM deve ir a zero e, depois de 300 ms de confirmação, o estado deve ser PARADO no andar 2.
 6. **Volta ao térreo.** Mova para baixo duas vezes, voltando ao centro entre elas. Confirme com clique curto. Abra 2 em menos de 2 s, feche e abra 1 por cerca de 0,2 s e feche T até PARADO.
@@ -135,7 +135,7 @@ Durante uma viagem simulada, abra PARADA. Confira FALHA e PWM zero. Feche o cont
 | Porta COM não aparece | Cabo USB de dados, conector do STM32, gravação concluída e placa/cristal compatíveis. |
 | FALHA de limite ou parada ao iniciar | LI, LS e PARADA devem fechar para GND em repouso. Confira `low`, `high` e `stop`. |
 | LCD vazio, mas USB funciona | Contraste, alimentação, conversor, endereço 0x27 e mapeamento do backpack. |
-| FALHA após chegar ao andar | Mantenha a chave do andar atual fechada enquanto PARADO. |
+| FALHA após chegar ao andar | Mantenha a chave do andar atual fechada enquanto PARADO e enquanto a porta fecha. |
 | FALHA durante o percurso | Solte a chave de partida em menos de 2 s, passe pelo intermediário e conclua em menos de 20 s. |
 | FALHA de entrada ou reset repetido | Guarde o log, confira alimentação e identificação da placa e peça revisão antes de prosseguir. |
 

@@ -8,6 +8,7 @@ void board_safe_init(void);
 void board_peripherals_init(void); /* after system clock setup, before scheduler */
 RawInputs board_read_inputs(void); /* bounded, nonblocking, coherent ADC/GPIO sample */
 void board_motor_write(MotorOutput output); /* ControlTask only */
+void board_door_write(bool open); /* ControlTask only; servo holds last command in faults */
 void board_indicators(ElState state); /* ControlTask only */
 void board_lcd_write(const char *row0, const char *row1); /* DisplayTask only */
 void board_fault_disable(void); /* startup/panic, never a normal second motor owner */

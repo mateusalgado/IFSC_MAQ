@@ -71,8 +71,8 @@ pinagem ou características elétricas como se estivessem confirmadas.
 
 ## 4. Implementação
 
-O núcleo contém sete estados: inicialização, referência, parado, subida, descida,
-chegada e falha. Parada, limites, validade das entradas, incoerência de sensores
+O núcleo contém oito estados: inicialização, referência, parado, fechamento da
+porta, subida, descida, chegada e falha. A porta com servomotor entrou em 18/11/2026. Parada, limites, validade das entradas, incoerência de sensores
 e prazo de execução são verificados antes do tratamento de comandos. A recuperação
 exige reconhecimento explícito e uma nova solicitação de referência; não restaura
 o destino anterior. A seleção admite apenas um destino e informa recusa de novos
@@ -118,7 +118,8 @@ após definir e calibrar a medição.
 
 ## 6. Resultados desta entrega
 
-Os 24 grupos automatizados passaram no computador, incluindo integração das
+Na entrega original, 24 grupos automatizados passaram no computador (26 após a
+inclusão da porta, ver [registro de 18/11/2026](VALIDACAO_PORTA_2026-11-18.md)), incluindo integração das
 entradas brutas até a FSM. A execução com AddressSanitizer e UndefinedBehaviorSanitizer
 também passou. O firmware foi compilado e ligado para Cortex-M4F/STM32F411 com as
 dependências reais do laboratório. Os comandos, ambiente e limites estão em

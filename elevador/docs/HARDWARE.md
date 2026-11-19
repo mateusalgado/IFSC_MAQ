@@ -15,6 +15,9 @@ FreeRTOS usa SysTick. Não utilizar configuração F103 de `washmachine`.
   regulador, pinout dos conectores e USB de dados real.
 - **Movimento:** motor CC com redução é a proposta. Definir tensão nominal,
   corrente em vazio, nominal, partida e bloqueio, torque, redução e eixo.
+- **Porta:** servomotor de posição pequeno, tipo SG90 (9 g), alimentado em 5 V.
+  Sinal de 50 Hz com pulso de 1,0 a 2,0 ms. Confirmar modelo, curso, corrente
+  de pico e sentido de giro. Não alimentar o servo pelo regulador de 3,3 V.
 - **Potência:** ponte H com entradas compatíveis com 3,3 V, proteção e
   dissipação adequadas. Modelo, número de sinais e brake/coast pendentes.
 - **Alimentação:** fonte do motor dimensionada após a escolha do motor;
@@ -50,6 +53,8 @@ pull-ups, polaridades e conflitos do esquema físico continuam pendentes.
   independente. Reavaliar totalmente se a ponte usar outra interface.
 - PB6/PB7: I²C1 SCL/SDA, AF4, para o LCD.
 - PB5: buzzer ativo com driver externo, se necessário.
+- PB8: sinal do servo da porta, TIM10_CH1, AF3, 50 Hz. Implementado no perfil
+  de bancada. PB9 (TIM11_CH1) fica livre.
 - PC13: LED da base, polaridade/corrente a verificar.
 - PA6/PA7: reserva possível para TIM3 encoder futuro; não habilitado.
 - PA11/PA12: preservar USB DM/DP; PA13/PA14: preservar SWD.
@@ -68,6 +73,12 @@ em determinados GPIOs não autoriza 5 V em entrada analógica. Verificar pull-up
 do backpack LCD e usar adaptação de nível quando exigida pelos datasheets.
 Nenhuma ponte H, fonte, corrente limite ou frequência PWM foi fechada aqui.
 
+O servo consome picos de corrente ao partir. Alimentá-lo por uma fonte de 5 V
+capaz de fornecê-los, com capacitor próximo ao conector e GND comum com a lógica.
+O sinal de 3,3 V do STM32 costuma ser aceito por servos de 5 V, mas isso deve ser
+conferido no modelo usado. O cabo do servo acompanha a cabine e precisa de folga
+em todo o curso.
+
 ## Referência mecânica
 
 O modelo [Elevator Lift Arduino](https://www.printables.com/model/1353500-elevator-lift-arduino)
@@ -81,8 +92,8 @@ transmissão (fuso/correia/cabo), folgas, curso útil, espaço para sensores, to
 e retenção ao desligar. NEMA 17 é uma referência de formato de motor de passo;
 a interface PWM/direção de motor CC desta base não é um driver STEP/DIR.
 Se o grupo escolher motor de passo, preservar FSM e entradas e substituir a
-interface de acionamento com requisitos e testes próprios. Não há segundo
-acionamento implementado agora.
+interface de acionamento com requisitos e testes próprios. O segundo tipo de
+motor do projeto é o servo da porta, descrito acima.
 
 ## Uso do material de MAQ
 

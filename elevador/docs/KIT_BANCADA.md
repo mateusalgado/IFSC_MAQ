@@ -28,6 +28,7 @@ Os nomes são os pinos do **STM32**, independentemente da posição nos conector
 | Limites inferior e superior | PB0, PB1 | Cada contato NF entre entrada e GND. Em repouso fechado. Ao abrir, o limite acusa 1. |
 | Parada | PB10 | Contato NF de diagnóstico para GND. Ao abrir, acusa 1. Limites e parada usam pull-up interno. |
 | LCD | PB6=SCL, PB7=SDA | Lado de 3,3 V do conversor voltado ao STM32. Lado de 5 V ao backpack alimentado a 5 V. GND comum. Conferir as tensões de repouso antes de ligar ao MCU. |
+| Servo da porta | PB8 | Sinal de 50 Hz para o fio de comando do servo. Pulso de 1,0 ms com a porta fechada e 2,0 ms com a porta aberta. Para só medir, ligue o instrumento em PB8 e GND. Para ligar um servo, alimente-o em 5 V por fonte própria com GND comum. |
 | Indicadores | PC13, PB5 | LED da placa ativo baixo indica PARADO, se a variante tiver esse LED. PB5 sobe em FALHA. Buzzer ativo opcional via estágio de acionamento adequado ao módulo. |
 | Sinais para instrumento | PA8=PWMA, PB12=AIN1, PB13=AIN2, PB14=STBY | Comece com a ponte desconectada. Referência do instrumento em GND. STBY deve permanecer baixo em todas as etapas. |
 
@@ -44,8 +45,8 @@ Para conferir a interface lógica com um módulo TB6612FNG identificado, use VCC
 | Ação manual | Resultado esperado |
 |---|---|
 | Soltar o joystick, fechar os três contatos NF e iniciar com as chaves de andar livres | INICIO; PWM zero, STBY baixo, `valid=1`, limites e parada em zero. Se iniciou com um NF aberto, corrigir e reconhecer a falha. |
-| Manter a chave do térreo fechada. Segurar SW por mais de 1 s e soltar | A referência encontra o térreo. Após confirmação, PARADO no andar 0. |
-| Mover o joystick para cima e voltar ao centro duas vezes. Dar um clique curto | Destino 2, SUBIDA. Abrir a chave do térreo em menos de 2 s. No instrumento, trem PWM em PA8, PB12 alto durante comando de subida e PB14 baixo. |
+| Manter a chave do térreo fechada. Segurar SW por mais de 1 s e soltar | A referência encontra o térreo. Após confirmação, PARADO no andar 0 e a porta abre: pulso de 2,0 ms em PB8 e `door=1` no USB. |
+| Mover o joystick para cima e voltar ao centro duas vezes. Dar um clique curto | Destino 2. A porta fecha (FECHANDO, pulso de 1,0 ms) e, 0,8 s depois, aparece SUBIDA. Manter a chave do térreo fechada enquanto FECHANDO e abri-la em menos de 2 s depois de SUBIDA. No instrumento, trem PWM em PA8, PB12 alto durante comando de subida e PB14 baixo. |
 | Acionar e liberar a chave do 1º por cerca de 0,2 s e fechar a do 2º antes do timeout de 20 s | O 1º é registrado como passagem. No 2º, PWM zero. Manter a chave final fechada por mais de 300 ms e enquanto PARADO. |
 | Selecionar o térreo com duas excursões para baixo, confirmar e repetir a sequência inversa | DESCIDA com PB13 alto durante comando, passagem pelo 1º e parada no térreo. |
 | Em nova viagem, abrir o contato de parada e depois fechá-lo | FALHA de parada e PWM zero. Uma pressão longa reconhece e volta a INICIO. Outra solicita referência. |

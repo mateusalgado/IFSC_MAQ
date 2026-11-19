@@ -29,5 +29,9 @@ int main(void) {
             }
         }
     }
-    puts("PASS kit contacts, ADC validity, PWM, direction and STBY inhibit");
+    /* Door servo: both pulses inside the usual 0.5-2.5 ms range of a 20 ms frame. */
+    assert(kit_servo_compare(false) == KIT_SERVO_CLOSED_US && kit_servo_compare(true) == KIT_SERVO_OPEN_US);
+    assert(KIT_SERVO_CLOSED_US >= 500u && KIT_SERVO_OPEN_US <= 2500u);
+    assert(KIT_SERVO_CLOSED_US != KIT_SERVO_OPEN_US && KIT_SERVO_PERIOD_US == 20000u);
+    puts("PASS kit contacts, ADC validity, PWM, direction, STBY inhibit and door servo pulses");
 }

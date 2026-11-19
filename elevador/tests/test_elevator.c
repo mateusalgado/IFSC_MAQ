@@ -12,8 +12,11 @@ static unsigned tests;
 static void tick(InputEvent event) {
     now += EL_CONTROL_MS; elevator_step(&e, &s, event, now);
     assert(e.motor.out.pwm <= EL_PWM_MAX);
-    if (e.state == EL_INIT || e.state == EL_IDLE || e.state == EL_ARRIVAL || e.state == EL_FAULT)
+    if (e.state == EL_INIT || e.state == EL_IDLE || e.state == EL_CLOSING ||
+        e.state == EL_ARRIVAL || e.state == EL_FAULT)
         assert(e.motor.out.pwm == 0 && e.motor.out.direction == 0);
+    /* Interlock: the hoist motor never runs with the door commanded open. */
+    if (e.door_open) assert(e.motor.out.pwm == 0);
 }
 static void wait_ms(uint32_t ms) { for (uint32_t n = 0; n < ms; n += EL_CONTROL_MS) tick(EV_NONE); }
 static void fresh(void) {
@@ -22,13 +25,18 @@ static void fresh(void) {
 }
 static void home(void) {
     fresh(); tick(EV_LONG); assert(e.state == EL_HOME);
-    wait_ms(500); assert(e.motor.out.direction == -1);
+    wait_ms(EL_DOOR_MS + 500); assert(e.motor.out.direction == -1);
     s.floors = 1; tick(EV_NONE); assert(e.state == EL_ARRIVAL);
     wait_ms(EL_ARRIVAL_MS); assert(e.state == EL_IDLE && e.referenced);
 }
+/* Confirm a selected destination and wait for the door before the trip starts. */
+static void depart(ElState expected) {
+    tick(EV_CONFIRM); assert(e.state == EL_CLOSING && !e.door_open);
+    wait_ms(EL_DOOR_MS); assert(e.state == expected);
+}
 static void to_second(void) {
-    home(); tick(EV_UP); tick(EV_UP); tick(EV_CONFIRM);
-    assert(e.state == EL_UP); s.floors = 0; wait_ms(500);
+    home(); tick(EV_UP); tick(EV_UP); depart(EL_UP);
+    s.floors = 0; wait_ms(500);
     s.floors = 2; tick(EV_NONE); s.floors = 0; wait_ms(500);
     s.floors = 4; tick(EV_NONE); assert(e.state == EL_ARRIVAL);
     wait_ms(EL_ARRIVAL_MS); assert(e.last_floor == 2 && e.state == EL_IDLE);
@@ -44,8 +52,8 @@ static void test_existing_ground(void) {
     assert(e.state == EL_ARRIVAL && e.motor.out.pwm == 0);
 }
 static void test_both_directions(void) {
-    to_second(); tick(EV_DOWN); tick(EV_DOWN); tick(EV_CONFIRM);
-    assert(e.state == EL_DOWN); s.floors = 0; wait_ms(500);
+    to_second(); tick(EV_DOWN); tick(EV_DOWN); depart(EL_DOWN);
+    s.floors = 0; wait_ms(500);
     assert(e.motor.out.direction == -1);
     s.floors = 2; tick(EV_NONE); s.floors = 0; wait_ms(500);
     s.floors = 1; tick(EV_NONE); wait_ms(EL_ARRIVAL_MS);
@@ -53,7 +61,7 @@ static void test_both_directions(void) {
 }
 static void test_same_floor(void) { home(); tick(EV_CONFIRM); assert(e.notice == NOTICE_SAME_FLOOR && e.state == EL_IDLE); }
 static void test_busy(void) {
-    home(); tick(EV_UP); tick(EV_CONFIRM); s.floors = 0; wait_ms(500);
+    home(); tick(EV_UP); depart(EL_UP); s.floors = 0; wait_ms(500);
     tick(EV_DOWN); tick(EV_CONFIRM); tick(EV_LONG);
     assert(e.state == EL_UP && e.destination == 1 && e.notice == NOTICE_BUSY);
     s.floors = 2; tick(EV_CONFIRM); wait_ms(EL_ARRIVAL_MS + 100);
@@ -64,19 +72,19 @@ static void test_home_timeout(void) {
     assert(e.state == EL_FAULT && e.fault == FAULT_HOME_TIMEOUT);
 }
 static void test_travel_timeout(void) {
-    home(); tick(EV_UP); tick(EV_CONFIRM); s.floors = 0; wait_ms(EL_TRAVEL_TIMEOUT_MS);
+    home(); tick(EV_UP); depart(EL_UP); s.floors = 0; wait_ms(EL_TRAVEL_TIMEOUT_MS);
     assert(e.state == EL_FAULT && e.fault == FAULT_TRAVEL_TIMEOUT);
 }
 static void test_sensors(void) {
     home(); s.floors = 3; tick(EV_CONFIRM); assert(e.fault == FAULT_SENSOR);
-    home(); tick(EV_UP); tick(EV_UP); tick(EV_CONFIRM); s.floors = 4;
+    home(); tick(EV_UP); tick(EV_UP); depart(EL_UP); s.floors = 4;
     tick(EV_NONE); assert(e.fault == FAULT_SENSOR); /* missing intermediate floor */
-    home(); tick(EV_UP); tick(EV_CONFIRM); wait_ms(EL_DEPART_TIMEOUT_MS);
+    home(); tick(EV_UP); depart(EL_UP); wait_ms(EL_DEPART_TIMEOUT_MS);
     assert(e.fault == FAULT_SENSOR);
 }
 static void test_limits(void) {
     for (unsigned limit = 0; limit < 2; ++limit) {
-        home(); tick(EV_UP); tick(EV_CONFIRM); s.floors = 0; wait_ms(500);
+        home(); tick(EV_UP); depart(EL_UP); s.floors = 0; wait_ms(500);
         s.lower_limit = limit == 0; s.upper_limit = limit == 1;
         tick(EV_CONFIRM); assert(e.fault == FAULT_LIMIT && e.motor.out.pwm == 0);
         tick(EV_LONG); assert(e.state == EL_FAULT);
@@ -84,7 +92,7 @@ static void test_limits(void) {
     fresh(); s.lower_limit = true; s.upper_limit = true; tick(EV_LONG); assert(e.state == EL_FAULT);
 }
 static void test_stop_recovery(void) {
-    home(); tick(EV_UP); tick(EV_CONFIRM); s.floors = 0; wait_ms(500);
+    home(); tick(EV_UP); depart(EL_UP); s.floors = 0; wait_ms(500);
     s.stop = true; tick(EV_CONFIRM); assert(e.fault == FAULT_STOP && !e.referenced);
     tick(EV_LONG); assert(e.state == EL_FAULT);
     s.stop = false; tick(EV_CONFIRM); assert(e.state == EL_FAULT);
@@ -93,7 +101,7 @@ static void test_stop_recovery(void) {
     tick(EV_LONG); assert(e.state == EL_HOME);
 }
 static void test_reset(void) {
-    home(); tick(EV_UP); tick(EV_CONFIRM); s.floors = 0; wait_ms(500);
+    home(); tick(EV_UP); depart(EL_UP); s.floors = 0; wait_ms(500);
     elevator_init(&e, now); wait_ms(500);
     assert(e.state == EL_INIT && !e.referenced && e.last_floor == -1);
 }
@@ -102,7 +110,7 @@ static void test_deadline(void) { home(); now += 100; tick(EV_UP); assert(e.faul
 static void test_invalid_sample(void) { home(); s.valid = false; tick(EV_UP); assert(e.fault == FAULT_INPUT); }
 static void test_wrap(void) {
     fresh(); now = UINT32_MAX - 200; elevator_init(&e, now);
-    tick(EV_LONG); wait_ms(500); assert(e.state == EL_HOME && e.motor.out.direction == -1);
+    tick(EV_LONG); wait_ms(EL_DOOR_MS + 500); assert(e.state == EL_HOME && e.motor.out.direction == -1);
     wait_ms(EL_HOME_TIMEOUT_MS); assert(e.fault == FAULT_HOME_TIMEOUT);
 }
 static void test_motor(void) {
@@ -163,7 +171,7 @@ static void test_button(void) {
     assert(inputs_step(&i, &r, 3040, &out) == EV_LONG);
 }
 static void test_display(void) {
-    char lines[2][17]; home(); tick(EV_UP); tick(EV_CONFIRM); s.floors = 0; tick(EV_NONE);
+    char lines[2][17]; home(); tick(EV_UP); depart(EL_UP); s.floors = 0; tick(EV_NONE);
     display_format(&e, 0, lines); assert(strstr(lines[0], "entre andares") && strstr(lines[1], "PWM"));
     display_format(&e, 1000, lines); assert(strstr(lines[0], "Ult:0 D:1"));
     assert(strlen(lines[0]) == 16 && strlen(lines[1]) == 16);
@@ -194,7 +202,8 @@ static void test_integrated_raw_trip(void) {
     raw_wait(&c, &raw, &time, 500); assert(c.elevator.state == EL_IDLE);
     raw.joystick = 4095; raw_wait(&c, &raw, &time, 200);
     raw.joystick = 2048; raw_wait(&c, &raw, &time, 200);
-    raw_press(&c, &raw, &time, 100); assert(c.elevator.state == EL_UP);
+    raw_press(&c, &raw, &time, 100); assert(c.elevator.state == EL_CLOSING);
+    raw_wait(&c, &raw, &time, EL_DOOR_MS); assert(c.elevator.state == EL_UP);
     raw.floors = 0; raw_wait(&c, &raw, &time, 500);
     raw.button = true; raw_wait(&c, &raw, &time, 100);
     raw.floors = 2; raw_wait(&c, &raw, &time, 500);
@@ -210,6 +219,44 @@ static void test_fault_requires_new_press(void) {
     assert(c.elevator.state == EL_FAULT);
     raw_press(&c, &raw, &time, 1100); assert(c.elevator.state == EL_INIT);
 }
+static void test_door(void) {
+    /* Closed while unreferenced and during the whole reference search. */
+    fresh(); assert(!e.door_open);
+    tick(EV_LONG); wait_ms(EL_DOOR_MS - 20);
+    assert(e.state == EL_HOME && e.motor.out.pwm == 0); /* waits for the servo */
+    wait_ms(200); assert(e.motor.out.direction == -1 && !e.door_open);
+    s.floors = 1; tick(EV_NONE); assert(e.state == EL_ARRIVAL && !e.door_open);
+    wait_ms(EL_ARRIVAL_MS); assert(e.state == EL_IDLE);
+    tick(EV_NONE); assert(e.door_open);
+    /* A request closes the door first; the trip starts only after the allowance. */
+    tick(EV_UP); tick(EV_CONFIRM); assert(e.state == EL_CLOSING && !e.door_open);
+    tick(EV_DOWN); assert(e.state == EL_CLOSING && e.notice == NOTICE_BUSY);
+    wait_ms(EL_DOOR_MS - 30); assert(e.state == EL_CLOSING);
+    wait_ms(30); assert(e.state == EL_UP && e.destination == 1);
+    s.floors = 0; wait_ms(500); assert(e.motor.out.direction == 1 && !e.door_open);
+    s.floors = 2; tick(EV_NONE); wait_ms(EL_ARRIVAL_MS); tick(EV_NONE);
+    assert(e.state == EL_IDLE && e.door_open && e.last_floor == 1);
+    /* Losing the floor sensor while closing is a position fault. */
+    home(); tick(EV_UP); tick(EV_CONFIRM); s.floors = 0; tick(EV_NONE);
+    assert(e.fault == FAULT_POSITION);
+    /* A fault freezes the door; recognition closes it without motion. */
+    home(); tick(EV_NONE); assert(e.door_open);
+    s.stop = true; tick(EV_NONE); assert(e.state == EL_FAULT && e.door_open);
+    s.stop = false; tick(EV_LONG); assert(e.state == EL_INIT && !e.door_open);
+    tick(EV_LONG); assert(e.state == EL_HOME);
+    s.floors = 0; wait_ms(EL_DOOR_MS - 30); assert(e.motor.out.pwm == 0);
+    wait_ms(200); assert(e.motor.out.direction == -1);
+    /* Defensive interlock: an open command during travel is a door fault. */
+    home(); tick(EV_UP); depart(EL_UP); e.door_open = true; tick(EV_NONE);
+    assert(e.fault == FAULT_DOOR && e.motor.out.pwm == 0);
+}
+static void test_door_display(void) {
+    char lines[2][17]; home(); tick(EV_NONE);
+    display_format(&e, 0, lines); assert(strstr(lines[1], "P:aberta"));
+    tick(EV_UP); tick(EV_CONFIRM);
+    display_format(&e, 0, lines); assert(strstr(lines[1], "Fechando porta"));
+    assert(strlen(lines[0]) == 16 && strlen(lines[1]) == 16);
+}
 #define RUN(fn) do { fn(); ++tests; puts("PASS " #fn); } while (0)
 int main(void) {
     RUN(test_boot); RUN(test_home); RUN(test_existing_ground); RUN(test_both_directions);
@@ -218,6 +265,6 @@ int main(void) {
     RUN(test_position_loss); RUN(test_deadline); RUN(test_invalid_sample); RUN(test_wrap);
     RUN(test_motor); RUN(test_joystick); RUN(test_debounce); RUN(test_button);
     RUN(test_display); RUN(test_safety_sweep); RUN(test_integrated_raw_trip);
-    RUN(test_fault_requires_new_press);
+    RUN(test_fault_requires_new_press); RUN(test_door); RUN(test_door_display);
     printf("%u test groups passed\n", tests); return 0;
 }

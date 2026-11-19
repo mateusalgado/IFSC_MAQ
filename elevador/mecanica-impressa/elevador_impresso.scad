@@ -3,7 +3,7 @@
 // andorinha; a cabine corre nos trilhos e o motor TT fica sob o teto.
 //
 // Uso:  openscad -D "part=\"segmento\"" -o stl/segmento.stl elevador_impresso.scad
-// Pecas: base, segmento, emenda, cabeca, cabine, grampo, tambor, gabarito, montagem
+// Pecas: base, segmento, emenda, cabeca, cabine, porta, grampo, tambor, gabarito, montagem
 //
 // Unidades em mm. X = largura, Y = frente(-)/fundo(+), Z = altura.
 // A face da frente da coluna fica em y = 0.
@@ -59,6 +59,16 @@ cab_gap = 2;             // folga entre o trilho e o fundo da cabine
 cam_h = 3.5;  cam_len = 16;  cam_w = 10;  cam_z = 28;
 cam_y = -9;              // centro do ressalto lateral, medido do fundo da cabine
 
+// ---------- Porta com servo (nominal tipo SG90, conferir) ----------
+servo_l      = 23.2;     // comprimento do corpo, com folga
+servo_w      = 12.6;     // largura do corpo, com folga
+servo_tab_sp = 27.8;     // entre os dois furos das abas
+servo_axis   = 6.2;      // do fim do corpo ate o eixo
+servo_horn_z = 13.5;     // do apoio das abas ate o topo do braco (horn)
+porta_t      = 2;
+porta_gap    = 2.5;      // folga entre a frente da cabine e a porta
+porta_aberta = true;     // posicao da porta na vista de montagem
+
 // ---------- Microchave (nominal tipo KW12, conferir) ----------
 sw_hole_sp = 9.5;
 clip_h = 12;  tab_h = 26;
@@ -74,6 +84,11 @@ col_top   = col_z0 + 2*seg_len;                      // topo da coluna = face in
 z_batente = plate_t + sock_h_base;
 z_terreo  = z_batente + overtravel;
 handle_top = cab_h + (cab_w/2 - 6);
+servo_x0  = cab_w/2 + 3;                             // inicio do alojamento do servo
+servo_yf  = -cab_d;                                // frente da cabine (coordenada local)
+servo_yc  = -cab_d + 7.2;                           // linha de centro do servo
+porta_px  = servo_x0 + servo_axis;                   // eixo da porta
+porta_za  = cab_h + servo_horn_z;                    // face inferior do braco da porta
 function z_andar(i) = z_terreo + i*floor_pitch;
 
 // ============================================================
@@ -179,6 +194,50 @@ module cabeca() {
     }
 }
 
+// Suporte do servo na lateral direita da cabine: bloco com cunha de 45 graus
+// (imprime sem suporte) e alojamento vazado onde o servo entra por cima.
+module suporte_servo() {
+    x0 = cab_w/2 - 1;  x1 = servo_x0 + servo_l + 5;  w = servo_w + 4;  bh = 16;
+    translate([x0, servo_yc - w/2, cab_h - bh]) cube([x1 - x0, w, bh]);
+    hull() {
+        translate([x0, servo_yc - w/2, cab_h - bh - eps]) cube([x1 - x0, w, eps]);
+        translate([x0, servo_yc - w/2, cab_h - bh - (x1 - x0)]) cube([eps, w, eps]);
+    }
+}
+module corte_servo() {
+    translate([servo_x0, servo_yc - servo_w/2, -1]) cube([servo_l, servo_w, cab_h + 2]);
+    for (s = [-1, 1]) translate([servo_x0 + servo_l/2 + s*servo_tab_sp/2, servo_yc, cab_h - 8])
+        cylinder(d = 1.7, h = 9);
+}
+
+// Porta, na posicao fechada e em coordenadas da cabine. O braco de cima
+// recebe o horn do servo num rebaixo e e preso pelo parafuso central.
+module porta() {
+    yp0 = servo_yf - porta_gap - porta_t;
+    difference() {
+        union() {
+            translate([-cab_w/2 - 1, yp0, 4])
+                cube([porta_px - 10.5 + cab_w/2 + 1, porta_t, porta_za]);
+            translate([porta_px - 19, yp0, porta_za]) cube([26, servo_yc + 7 - yp0, 4]);
+        }
+        translate([porta_px, servo_yc, porta_za - eps]) cylinder(d = 2.4, h = 6);
+        translate([0, 0, porta_za - eps]) linear_extrude(1.7) hull() {
+            translate([porta_px, servo_yc]) circle(d = 7.9);
+            translate([porta_px, servo_yc - 14.5]) circle(d = 5);
+        }
+    }
+}
+
+module porta_montada() {
+    translate([porta_px, servo_yc, 0]) rotate([0, 0, porta_aberta ? 90 : 0])
+        translate([-porta_px, -servo_yc, 0]) color("khaki") porta();
+    color("royalblue") {
+        translate([servo_x0, servo_yc - servo_w/2 + 0.2, cab_h - 15.9]) cube([servo_l - 0.4, servo_w - 0.4, 22.7]);
+        translate([servo_x0 - 4.5, servo_yc - servo_w/2 + 0.2, cab_h]) cube([servo_l + 9, servo_w - 0.4, 2.5]);
+        translate([porta_px, servo_yc, cab_h + 6.8]) cylinder(d = 11.5, h = 4);
+    }
+}
+
 module perfil_alca() {
     hw = cab_w/2;
     polygon([[-hw, 0], [-hw, cab_h], [-6, handle_top], [6, handle_top], [hw, cab_h], [hw, 0]]);
@@ -211,12 +270,14 @@ module cabine() {
                 difference() { perfil_alca(); offset(delta = -3) perfil_alca(); }
                 translate([-hw, cab_h - 8]) square([cab_w, cab_w]);
             }
+            suporte_servo();
             // ressaltos laterais das microchaves
             for (sx = [-1, 1]) scale([sx, 1, 1]) translate([hw - eps, cam_y + cam_w/2, 0])
                 rotate([90, 0, 0]) linear_extrude(cam_w) polygon([
                     [0, cam_z - cam_len/2 - cam_h], [cam_h, cam_z - cam_len/2],
                     [cam_h, cam_z + cam_len/2],     [0, cam_z + cam_len/2 + cam_h]]);
         }
+        corte_servo();
         // canais: justos nas sapatas, folgados no trecho da cunha
         translate([0, 0, -eps]) linear_extrude(shoe_h + 2*eps) canal(fit_slide);
         translate([0, 0, cab_h - shoe_h]) linear_extrude(shoe_h + eps) canal(fit_slide);
@@ -335,6 +396,7 @@ module montagem() {
         color("orangered") translate([xs, motor_y - 0.5, motor_zc]) rotate([90, 0, 0]) tambor();
     }
     color("deepskyblue") translate([0, cab_y, zc]) cabine();
+    translate([0, cab_y, zc]) porta_montada();
     color("black") translate([0, string_y, zc + handle_top])
         cylinder(d = 1, h = col_top + motor_zc - zc - handle_top);
     for (i = [0 : 2]) sensor(z_andar(i) + cam_z, 1);
@@ -348,6 +410,7 @@ else if (part == "emenda") emenda();
 else if (part == "cabeca") rotate([180, 0, 0]) cabeca();
 else if (part == "cabine") cabine();
 else if (part == "grampo") grampo();
+else if (part == "porta") rotate([90, 0, 0]) porta();
 else if (part == "tambor") tambor();
 else if (part == "gabarito") gabarito();
 else montagem();

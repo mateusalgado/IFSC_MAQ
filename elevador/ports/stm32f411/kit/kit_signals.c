@@ -24,3 +24,7 @@ KitSignals kit_signals(MotorOutput command) {
     return (KitSignals){((KIT_STANDBY_BIT | (KIT_DIRECTION_BITS ^ direction)) << 16)
                          | direction, compare};
 }
+
+uint32_t kit_servo_compare(bool open) {
+    return open ? KIT_SERVO_OPEN_US : KIT_SERVO_CLOSED_US;
+}

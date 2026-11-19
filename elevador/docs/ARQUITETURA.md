@@ -33,16 +33,17 @@ stateDiagram-v2
     [*] --> INICIO: saídas inativas
     INICIO --> REFERENCIA: botão longo liberado
     REFERENCIA --> CHEGADA: sensor térreo confirmado
-    CHEGADA --> PARADO: confirmação mantida por 300 ms
-    PARADO --> SUBIDA: destino acima e clique
-    PARADO --> DESCIDA: destino abaixo e clique
+    CHEGADA --> PARADO: confirmação mantida por 300 ms, porta abre
+    PARADO --> FECHANDO: destino diferente e clique, porta fecha
+    FECHANDO --> SUBIDA: 0,8 s e destino acima
+    FECHANDO --> DESCIDA: 0,8 s e destino abaixo
     SUBIDA --> CHEGADA: sensor do destino
     DESCIDA --> CHEGADA: sensor do destino
     FALHA --> INICIO: causa removida e reconhecimento longo
     note right of FALHA
       Qualquer estado pode entrar em FALHA.
       Parada, limite, sensor incoerente,
-      timeout, perda de posição ou prazo.
+      timeout, perda de posição, prazo ou porta.
     end note
 ```
 
@@ -52,13 +53,33 @@ stateDiagram-v2
 - `REFERENCIA`: descer até o sensor 0; sensor 0 já confirmado permite referência
   sem deslocamento. Timeout de 15 s. Fim inferior não substitui sensor de andar.
 - `PARADO`: só aceita viagens se a posição referenciada continuar confirmada.
-  Pedido do próprio andar gera aviso sem movimento.
+  Pedido do próprio andar gera aviso sem movimento. A porta fica aberta.
+- `FECHANDO`: porta comandada fechada, motor da cabine parado. Espera 0,8 s,
+  recusa pedidos e gera falha de posição se o sensor do andar for perdido.
 - `SUBIDA`/`DESCIDA`: um único destino. Exigir passagem pelos sensores em ordem,
   sem pular andares. Timeout de 20 s e máximo de 2 s para deixar cada sensor.
 - `CHEGADA`: comando zero imediatamente, confirmar permanência por 300 ms.
   Perda do sensor nessa espera gera falha; não tentar corrigir sozinho.
 - `FALHA`: comando zero, destino descartado, referência invalidada. A primeira
   causa fica registrada; reconhecer enquanto uma guarda continua ativa não funciona.
+  A porta permanece no último comando; o reconhecimento a fecha.
+
+## Porta
+
+A porta é movida por um servomotor de posição, sem sensor de fim de curso. A FSM
+guarda o comando (aberta ou fechada) e o instante da última mudança. A porta é
+tratada como fechada quando está comandada fechada há pelo menos 0,8 s
+(`EL_DOOR_MS`). Esse tempo é uma margem provisória para o curso do servo e precisa
+de calibração com a porta real.
+
+- A porta começa fechada após o reset e fica fechada em `INICIO`, `REFERENCIA`,
+  `SUBIDA`, `DESCIDA` e `CHEGADA`. Abre apenas em `PARADO`.
+- A referência e as viagens só comandam o motor da cabine com a porta fechada.
+  Em viagem, porta não fechada gera a falha `porta`.
+- Em falha a porta não se move: se a parada foi acionada com a porta aberta, ela
+  continua aberta até o reconhecimento.
+- Não há detecção de obstáculo nem de porta travada. Um servo que não completa
+  o curso não é percebido pelo firmware.
 
 Um intervalo entre chamadas de controle superior a 50 ms gera falha. Tempos
 usam subtração `uint32_t`, incluindo o transbordamento de milissegundos. O relógio
@@ -87,7 +108,7 @@ contrato lógico; brake/coast dependem da ponte. Desligar não sustenta a cabine
 ## FreeRTOS
 
 - `Control`, prioridade 4, período 10 ms, pilha 512 palavras: lê uma amostra
-  coerente não bloqueante, trata entradas, executa FSM, escreve motor e indicadores.
+  coerente não bloqueante, trata entradas, executa FSM, escreve motor, porta e indicadores.
   É o único proprietário normal do motor e do estado mutável. `vTaskDelayUntil`
   mantém a referência periódica. Nenhum `printf`, I²C ou espera por USB nesse ciclo.
 - `Display`, prioridade 2, pilha 512 palavras: recebe cópia do estado em mailbox

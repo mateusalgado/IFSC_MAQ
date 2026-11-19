@@ -12,6 +12,8 @@ void display_format(const Elevator *e, uint32_t now, char lines[2][17]) {
     snprintf(a, sizeof a, "Ult:%c D:%c Sel:%d", last, dest, e->selection);
     snprintf(b, sizeof b, "%s", elevator_state_name(e->state));
     if (e->state == EL_INIT) snprintf(b, sizeof b, "Segure p/ refer.");
+    if (e->state == EL_IDLE) snprintf(b, sizeof b, "PARADO P:aberta");
+    if (e->state == EL_CLOSING) snprintf(b, sizeof b, "Fechando porta");
     if (e->state == EL_UP || e->state == EL_DOWN || e->state == EL_HOME) {
         if (e->current_floor < 0 && (now / 1000u) % 2u == 0) snprintf(a, sizeof a, "entre andares");
         snprintf(b, sizeof b, "%s D:%c PWM %u%%", e->state == EL_UP ? "SUB" : e->state == EL_DOWN ? "DES" : "REF", dest, e->motor.out.pwm / 10u);

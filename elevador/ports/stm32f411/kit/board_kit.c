@@ -47,6 +47,18 @@ void board_peripherals_init(void) {
     GPIO_InitTypeDef pwm = {.Pin = GPIO_PIN_8, .Mode = GPIO_MODE_AF_PP, .Alternate = GPIO_AF1_TIM1};
     HAL_GPIO_Init(GPIOA, &pwm);
 
+    /* Door servo: TIM10_CH1 on PB8, 50 Hz, starts at the closed pulse. */
+    __HAL_RCC_TIM10_CLK_ENABLE();
+    TIM10->PSC = KIT_SERVO_PRESCALER - 1u;
+    TIM10->ARR = KIT_SERVO_PERIOD_US - 1u;
+    TIM10->CCR1 = kit_servo_compare(false);
+    TIM10->CCMR1 = TIM_CCMR1_OC1M_2 | TIM_CCMR1_OC1M_1 | TIM_CCMR1_OC1PE; /* PWM mode 1 */
+    TIM10->EGR = TIM_EGR_UG;
+    TIM10->CCER = TIM_CCER_CC1E;
+    TIM10->CR1 = TIM_CR1_ARPE | TIM_CR1_CEN;
+    GPIO_InitTypeDef servo = {.Pin = GPIO_PIN_8, .Mode = GPIO_MODE_AF_PP, .Alternate = GPIO_AF3_TIM10};
+    HAL_GPIO_Init(GPIOB, &servo);
+
     __HAL_RCC_ADC1_CLK_ENABLE();
     ADC1_COMMON->CCR = ADC_CCR_ADCPRE_0; /* APB2 / 4 = 24 MHz */
     ADC1->SMPR2 = ADC_SMPR2_SMP0; /* channel 0, 480 cycles */
@@ -129,6 +141,9 @@ void board_motor_write(MotorOutput output) {
     TIM1->CCR1 = signals.compare;
     __set_PRIMASK(mask);
 }
+
+/* The servo keeps its last pulse in faults and panics: the door holds position. */
+void board_door_write(bool open) { TIM10->CCR1 = kit_servo_compare(open); }
 
 void board_indicators(ElState state) {
     HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, state == EL_IDLE ? GPIO_PIN_RESET : GPIO_PIN_SET);
