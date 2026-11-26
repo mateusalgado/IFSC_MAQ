@@ -228,8 +228,8 @@ module porta() {
     }
 }
 
-module porta_montada() {
-    translate([porta_px, servo_yc, 0]) rotate([0, 0, porta_aberta ? 90 : 0])
+module porta_montada(aberta = porta_aberta) {
+    translate([porta_px, servo_yc, 0]) rotate([0, 0, aberta ? 90 : 0])
         translate([-porta_px, -servo_yc, 0]) color("khaki") porta();
     color("royalblue") {
         translate([servo_x0, servo_yc - servo_w/2 + 0.2, cab_h - 15.9]) cube([servo_l - 0.4, servo_w - 0.4, 22.7]);
@@ -404,7 +404,44 @@ module montagem() {
     sensor(z_andar(2) + cam_z + cam_len/2 + cam_h + limit_gap, -1);
 }
 
-if (part == "base") base();
+// ============================================================
+// Verificacao de colisao: part = "colisao" gera apenas as interferencias
+// entre a cabine (com a porta) e as pecas fixas ao longo de todo o curso.
+// Resultado vazio ou so com contatos de volume zero = sem colisao. Os roletes
+// das microchaves ficam de fora, porque devem mesmo tocar os ressaltos.
+// ============================================================
+
+module fixos() {
+    base();
+    segmento_montado(col_z0);
+    segmento_montado(col_z0 + seg_len);
+    translate([0, col_t, col_z0 + seg_len + 40]) rotate([-90, 0, 0]) emenda();
+    translate([0, 0, col_top]) {
+        cabeca(); motor_tt_ref();
+        translate([xs, motor_y - 0.5, motor_zc]) rotate([90, 0, 0]) tambor();
+    }
+    for (s = [[z_andar(0) + cam_z, 1], [z_andar(1) + cam_z, 1], [z_andar(2) + cam_z, 1],
+              [z_andar(0) + cam_z - cam_len/2 - cam_h - limit_gap, -1],
+              [z_andar(2) + cam_z + cam_len/2 + cam_h + limit_gap, -1]])
+        translate([0, 0, s[0]]) scale([s[1], 1, s[1]]) translate([0, 0, -tab_h/2]) {
+            grampo();
+            translate([col_w/2 - 10.6, cab_y + cam_y - 3.2, tab_h/2 - 10]) cube([10.6, 6.4, 20]);
+        }
+}
+
+module colisao() {
+    for (z = [z_batente : 20 : col_top + motor_zc - flange_r - handle_top]) intersection() {
+        translate([0, cab_y, z]) { cabine(); porta_montada(false); }
+        fixos();
+    }
+    for (i = [0 : 2]) intersection() {
+        translate([0, cab_y, z_andar(i)]) porta_montada(true);
+        fixos();
+    }
+}
+
+if (part == "colisao") colisao();
+else if (part == "base") base();
 else if (part == "segmento") segmento();
 else if (part == "emenda") emenda();
 else if (part == "cabeca") rotate([180, 0, 0]) cabeca();

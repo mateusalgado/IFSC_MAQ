@@ -15,6 +15,7 @@ FreeRTOS usa SysTick. Não utilizar configuração F103 de `washmachine`.
   regulador, pinout dos conectores e USB de dados real.
 - **Movimento:** motor CC com redução é a proposta. Definir tensão nominal,
   corrente em vazio, nominal, partida e bloqueio, torque, redução e eixo.
+- **Botões de andar:** três botões de pulso NA de 12 mm (T, 1, 2) na IHM, ligados ao GND.
 - **Porta:** servomotor de posição pequeno, tipo SG90 (9 g), alimentado em 5 V.
   Sinal de 50 Hz com pulso de 1,0 a 2,0 ms. Confirmar modelo, curso, corrente
   de pico e sentido de giro. Não alimentar o servo pelo regulador de 3,3 V.
@@ -23,6 +24,7 @@ FreeRTOS usa SysTick. Não utilizar configuração F103 de `washmachine`.
 - **Alimentação:** fonte do motor dimensionada após a escolha do motor;
   alimentação regulada da lógica, desacoplamento, proteção e retorno de corrente.
 - **Interface:** joystick analógico com botão; LCD 16×2 e módulo I²C a confirmar.
+  Ficam na tampa da [IHM](../ihm/README.md), com os botões de andar e a emergência.
   Conferir tensão, endereço e mapeamento do expansor; não assumir 0x27/PCF8574.
 - **Posição:** três sensores pontuais, um por andar; escolher contato, óptico ou
   magnético, faixa de detecção, polaridade, repetibilidade e montagem.
@@ -53,6 +55,8 @@ pull-ups, polaridades e conflitos do esquema físico continuam pendentes.
   independente. Reavaliar totalmente se a ponte usar outra interface.
 - PB6/PB7: I²C1 SCL/SDA, AF4, para o LCD.
 - PB5: buzzer ativo com driver externo, se necessário.
+- PB3, PB4, PB15: botões T, 1 e 2 da IHM, GPIO com pull-up.
+  PB3 e PB4 deixam a função JTAG; a gravação por SWD (PA13/PA14) continua igual.
 - PB8: sinal do servo da porta, TIM10_CH1, AF3, 50 Hz. Implementado no perfil
   de bancada. PB9 (TIM11_CH1) fica livre.
 - PC13: LED da base, polaridade/corrente a verificar.

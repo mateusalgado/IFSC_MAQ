@@ -29,6 +29,8 @@ void board_peripherals_init(void) {
     pins(GPIOA, GPIO_PIN_0, GPIO_MODE_ANALOG, GPIO_NOPULL);
     pins(GPIOA, GPIO_PIN_2 | GPIO_PIN_3 | GPIO_PIN_4 | GPIO_PIN_5, GPIO_MODE_INPUT, GPIO_PULLUP);
     pins(GPIOB, SAFETY_PINS, GPIO_MODE_IT_RISING, GPIO_PULLUP);
+    /* HMI floor buttons T, 1, 2. PB3/PB4 leave JTAG; SWD on PA13/PA14 is unaffected. */
+    pins(GPIOB, KIT_CALL_PINS, GPIO_MODE_INPUT, GPIO_PULLUP);
     HAL_NVIC_SetPriority(EXTI0_IRQn, 4, 0);
     HAL_NVIC_SetPriority(EXTI1_IRQn, 4, 0);
     HAL_NVIC_SetPriority(EXTI15_10_IRQn, 4, 0);

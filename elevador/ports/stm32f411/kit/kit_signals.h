@@ -4,6 +4,7 @@
 #include "motor.h"
 
 #define KIT_STANDBY_BIT (1u << 14)
+#define KIT_CALL_PINS ((1u << 3) | (1u << 4) | (1u << 15)) /* port B, NO to ground */
 #define KIT_DIRECTION_BITS ((1u << 12) | (1u << 13))
 #define KIT_PWM_COUNTS 4800u /* TIM1 at 96 MHz, 20 kHz */
 /* Door servo on TIM10_CH1 (PB8): 1 MHz tick, 50 Hz frame, compare in microseconds.

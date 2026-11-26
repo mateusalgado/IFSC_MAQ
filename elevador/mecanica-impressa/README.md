@@ -62,10 +62,10 @@ Se algo não servir, ajuste os parâmetros no começo de [elevador_impresso.scad
 2. Apoie o segundo segmento sobre o primeiro e parafuse a emenda nas costas com quatro M3. Passe o dedo nos trilhos sobre a junção; se houver degrau, lixe até ficar liso.
 3. Coloque os cinco grampos nas bordas da coluna, sem apertar.
 4. Encaixe o servo no alojamento da cabine, com o eixo para cima e do lado da cabine, e prenda com os dois parafusos. Com o servo na posição de porta fechada, encaixe o braço no rebaixo da porta apontando para a frente e prenda pelo parafuso central. Deixe folga no cabo para todo o curso.
-4. Enfie a cabine nos trilhos por cima. Ela deve descer sozinha até a base.
-5. Parafuse o motor na cabeça com os dois M3 × 25, encaixe o tambor e prenda a cabeça no topo da coluna com dois M3.
-6. Amarre o fio no furo do tambor e na alça da cabine, com a cabine apoiada na base. Enrole de modo que o fio desça pelo lado do centro da torre.
-7. Com a cabine no nível de cada andar, deslize o grampo até a microchave clicar no meio do ressalto e aperte o parafuso. Ponha os fins de curso cerca de 8 mm além do térreo e do 2º andar. Os rasgos da aba ajustam a distância da microchave ao ressalto.
+5. Enfie a cabine nos trilhos por cima. Ela deve descer sozinha até a base.
+6. Parafuse o motor na cabeça com os dois M3 × 25, encaixe o tambor e prenda a cabeça no topo da coluna com dois M3.
+7. Amarre o fio no furo do tambor e na alça da cabine, com a cabine apoiada na base. Enrole de modo que o fio desça pelo lado do centro da torre.
+8. Com a cabine no nível de cada andar, deslize o grampo até a microchave clicar no meio do ressalto e aperte o parafuso. Ponha os fins de curso cerca de 8 mm além do térreo e do 2º andar. Os rasgos da aba ajustam a distância da microchave ao ressalto.
 
 ## Comparação com a versão de varões
 
@@ -83,4 +83,15 @@ Se algo não servir, ajuste os parâmetros no começo de [elevador_impresso.scad
 - **Porta e servo.** Cotas do servo e altura do braço (`servo_horn_z`) são nominais. O peso do servo e da porta fica na frente e de um lado da cabine em balanço, o que aumenta a tendência de inclinar e prender nos trilhos.
 - **Cotas do motor TT e da microchave.** Valores nominais, não medidos, como na outra versão.
 - **Torque e retenção sem energia.** Mesma situação da outra versão, com atrito maior a favor da retenção e contra a subida.
-- **Suporte da eletrônica.** Ainda não modelado; a base tem quatro furos para fixar numa tábua.
+- **Eletrônica.** Placa, ponte H, LCD, joystick, botões de andar e emergência ficam na [IHM](../ihm/README.md), ao lado da torre. Fixe a base e a IHM numa mesma tábua: a torre tem 400 mm de altura e pode tombar.
+- **Cabos.** Ainda não há guia para o cabo do servo, que acompanha a cabine, nem presilhas para os fios das microchaves.
+
+## Verificar colisões
+
+`part = "colisao"` gera só as interferências entre a cabine, com a porta fechada e aberta, e as peças fixas ao longo de todo o curso:
+
+```powershell
+& "C:\Program Files\OpenSCAD\openscad.com" -o colisao.stl -D 'part=\"colisao\"' elevador_impresso.scad
+```
+
+Em 25/11/2026 o resultado só teve contatos de volume zero: a cabine apoiada no batente da base. Repita depois de mudar qualquer parâmetro.

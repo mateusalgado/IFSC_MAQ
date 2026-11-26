@@ -270,8 +270,8 @@ module porta() {
     }
 }
 
-module porta_montada() {
-    translate([porta_px, servo_yc, 0]) rotate([0, 0, porta_aberta ? 90 : 0])
+module porta_montada(aberta = porta_aberta) {
+    translate([porta_px, servo_yc, 0]) rotate([0, 0, aberta ? 90 : 0])
         translate([-porta_px, -servo_yc, 0]) color("khaki") porta();
     color("royalblue") {
         translate([servo_x0, servo_yc - servo_w/2 + 0.2, cab_h - 15.9]) cube([servo_l - 0.4, servo_w - 0.4, 22.7]);
@@ -389,7 +389,42 @@ module montagem() {
     sensor(z_andar(2) + cam_z + cam_len/2 + cam_h + limit_gap, -1);
 }
 
-if (part == "base") base();
+// ============================================================
+// Verificacao de colisao: part = "colisao" gera apenas as interferencias
+// entre a cabine (com a porta) e as pecas fixas ao longo de todo o curso.
+// Resultado vazio ou so com contatos de volume zero = sem colisao. Os roletes
+// das microchaves ficam de fora, porque devem mesmo tocar os ressaltos.
+// ============================================================
+
+module fixos() {
+    base();
+    posicoes_varoes() translate([0, 0, base_floor]) cylinder(d = rod_d, h = rod_len);
+    translate([0, 0, top_z]) {
+        topo(); motor_tt_ref();
+        translate([xs, drum_y + drum_w/2, motor_zc]) rotate([90, 0, 0]) tambor();
+    }
+    for (s = [[z_andar(0) + cam_z, 1], [z_andar(1) + cam_z, 1], [z_andar(2) + cam_z, 1],
+              [z_andar(0) + cam_z - cam_len/2 - cam_h - limit_gap, -1],
+              [z_andar(2) + cam_z + cam_len/2 + cam_h + limit_gap, -1]])
+        translate([0, mast_y, s[0]]) scale([s[1], 1, s[1]]) translate([0, 0, -tab_h/2]) {
+            bracadeira();
+            translate([rod_d/2 + 4, -20.7, tab_h/2 - 10]) cube([6.4, 10.6, 20]);
+        }
+}
+
+module colisao() {
+    for (z = [base_top : 20 : top_z - handle_top]) intersection() {
+        translate([0, 0, z]) { cabine(); porta_montada(false); }
+        fixos();
+    }
+    for (i = [0 : 2]) intersection() {
+        translate([0, 0, z_andar(i)]) porta_montada(true);
+        fixos();
+    }
+}
+
+if (part == "colisao") colisao();
+else if (part == "base") base();
 else if (part == "topo") topo();
 else if (part == "cabine") cabine();
 else if (part == "bracadeira") bracadeira();

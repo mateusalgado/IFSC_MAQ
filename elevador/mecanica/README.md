@@ -57,10 +57,10 @@ Se algo não servir, ajuste os parâmetros no começo de [elevador.scad](elevado
 1. Encaixe os três varões na base e trave com os M3 laterais.
 2. Passe a cabine pelos dois varões da frente. Ela deve cair sozinha com o próprio peso; se prender, lixe os furos.
 3. Encaixe o servo no alojamento da cabine, com o eixo para cima e do lado da cabine, e prenda com os dois parafusos. Com o servo na posição de porta fechada, encaixe o braço no rebaixo da porta apontando para a frente e prenda pelo parafuso central. Deixe folga no cabo para todo o curso.
-3. Coloque as cinco braçadeiras no mastro, sem apertar. Três com a aba para a direita (andares) e duas viradas de cabeça para baixo, com a aba para a esquerda (fins de curso).
-4. Parafuse o motor na parede do topo, encaixe o tambor e prenda o topo nos varões.
-5. Amarre o fio no furo do tambor, passe pela abertura e amarre na alça da cabine com ela apoiada na base. Enrole de modo que o fio desça pelo lado do centro da torre.
-6. Com a cabine no nível de cada andar, posicione a braçadeira até a microchave clicar no meio do ressalto, e aperte. Ponha os fins de curso cerca de 8 mm além do térreo e do 2º andar.
+4. Coloque as cinco braçadeiras no mastro, sem apertar. Três com a aba para a direita (andares) e duas viradas de cabeça para baixo, com a aba para a esquerda (fins de curso).
+5. Parafuse o motor na parede do topo, encaixe o tambor e prenda o topo nos varões.
+6. Amarre o fio no furo do tambor, passe pela abertura e amarre na alça da cabine com ela apoiada na base. Enrole de modo que o fio desça pelo lado do centro da torre.
+7. Com a cabine no nível de cada andar, posicione a braçadeira até a microchave clicar no meio do ressalto, e aperte. Ponha os fins de curso cerca de 8 mm além do térreo e do 2º andar.
 
 ## O que falta verificar
 
@@ -69,7 +69,8 @@ Se algo não servir, ajuste os parâmetros no começo de [elevador.scad](elevado
 - **Torque.** Com tambor de raio 10,3 mm, 100 g de cabine mais carga pedem cerca de 0,010 N·m no eixo. Falta a curva do motor real e a massa pesada da cabine.
 - **Retenção sem energia.** Depende do atrito da redução do motor. Precisa ser testada com a cabine carregada; se ela descer sozinha, será preciso contrapeso ou trava.
 - **Porta e servo.** Cotas do servo e altura do braço (`servo_horn_z`) são nominais. O peso do servo fica de um lado da cabine e o cabo acompanha o movimento; os dois aumentam o atrito nas guias. A porta aberta avança cerca de 70 mm à frente da cabine.
-- **Suporte da eletrônica.** Placa, driver, LCD e joystick ainda não têm lugar na estrutura. A base tem quatro furos para fixar numa tábua.
+- **Eletrônica.** Placa, ponte H, LCD, joystick, botões de andar e emergência ficam na [IHM](../ihm/README.md), ao lado da torre. Fixe a base e a IHM numa mesma tábua: a torre tem 400 mm de altura e pode tombar.
+- **Cabos.** Ainda não há guia para o cabo do servo, que acompanha a cabine, nem presilhas para os fios das microchaves.
 
 Esses pontos correspondem às linhas T1, M1, R1 e S0–S2 da [ficha da etapa 2](../docs/FICHA_LEVANTAMENTO_ETAPA_2.md).
 
@@ -78,3 +79,13 @@ Esses pontos correspondem às linhas T1, M1, R1 e S0–S2 da [ficha da etapa 2](
 - [Elevator Simulation Kit, de Mauricio Duarte (MakerWorld)](https://makerworld.com/en/models/870949-elevator-simulation-kit-e-book). Kit gratuito com motor TT, fio, ponte L9110S e sensor ultrassônico ou reed, quatro paradas, 483 g de PLA. É a referência mais próxima e serve de plano B. Nenhum arquivo dele foi copiado.
 - [Elevador de mesa de CapeGeek (blog Arduino)](https://blog.arduino.cc/2023/12/28/desktop-elevator-provides-a-positive-sensory-experience-for-an-autistic-child/). Três andares com fuso, motor de passo e uma microchave por andar.
 - [Elevator Lift Arduino (Printables)](https://www.printables.com/model/1353500-elevator-lift-arduino). Citado na documentação anterior; a página continua inacessível à leitura automática.
+
+## Verificar colisões
+
+`part = "colisao"` gera só as interferências entre a cabine, com a porta fechada e aberta, e as peças fixas ao longo de todo o curso:
+
+```powershell
+& "C:\Program Files\OpenSCAD\openscad.com" -o colisao.stl -D 'part=\"colisao\"' elevador.scad
+```
+
+Em 25/11/2026 o resultado só teve contatos de volume zero: a cabine apoiada no batente da base. Repita depois de mudar qualquer parâmetro.

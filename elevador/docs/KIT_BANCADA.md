@@ -28,6 +28,7 @@ Os nomes são os pinos do **STM32**, independentemente da posição nos conector
 | Limites inferior e superior | PB0, PB1 | Cada contato NF entre entrada e GND. Em repouso fechado. Ao abrir, o limite acusa 1. |
 | Parada | PB10 | Contato NF de diagnóstico para GND. Ao abrir, acusa 1. Limites e parada usam pull-up interno. |
 | LCD | PB6=SCL, PB7=SDA | Lado de 3,3 V do conversor voltado ao STM32. Lado de 5 V ao backpack alimentado a 5 V. GND comum. Conferir as tensões de repouso antes de ligar ao MCU. |
+| Botões de andar (IHM) | PB3, PB4, PB15 | Botões NA T, 1 e 2 para GND. Em repouso abertos. Um botão apertado produz `calls` 1, 2 ou 4 no USB. Opcionais nesta bancada. |
 | Servo da porta | PB8 | Sinal de 50 Hz para o fio de comando do servo. Pulso de 1,0 ms com a porta fechada e 2,0 ms com a porta aberta. Para só medir, ligue o instrumento em PB8 e GND. Para ligar um servo, alimente-o em 5 V por fonte própria com GND comum. |
 | Indicadores | PC13, PB5 | LED da placa ativo baixo indica PARADO, se a variante tiver esse LED. PB5 sobe em FALHA. Buzzer ativo opcional via estágio de acionamento adequado ao módulo. |
 | Sinais para instrumento | PA8=PWMA, PB12=AIN1, PB13=AIN2, PB14=STBY | Comece com a ponte desconectada. Referência do instrumento em GND. STBY deve permanecer baixo em todas as etapas. |

@@ -6,6 +6,8 @@ RawInputs kit_decode(uint32_t port_a, uint32_t port_b, uint16_t adc, bool fresh)
         .joystick = adc, .valid = fresh,
         .button = !(port_a & (1u << 2)),
         .floors = (uint8_t)((~port_a >> 3) & 7u), /* NO to ground */
+        .calls = (uint8_t)((!(port_b & (1u << 3)) ? 1u : 0u) | (!(port_b & (1u << 4)) ? 2u : 0u) |
+                           (!(port_b & (1u << 15)) ? 4u : 0u)),
         .lower_limit = (port_b & (1u << 0)) != 0,
         .upper_limit = (port_b & (1u << 1)) != 0,
         .stop = (port_b & (1u << 10)) != 0 /* NC to ground */

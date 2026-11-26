@@ -78,12 +78,12 @@ static void log_task(void *arg) {
         if (!available) { ++usb_dropped; continue; }
         int len = snprintf((char *)tx, sizeof tx,
             "ms=%lu state=%s fault=%s last=%d dest=%d pwm=%u door=%u notice=%u lost=%lu usb_lost=%lu "
-            "adc=%u btn=%u floors=%u low=%u high=%u stop=%u valid=%u\r\n",
+            "adc=%u btn=%u floors=%u calls=%u low=%u high=%u stop=%u valid=%u\r\n",
             (unsigned long)s.now, elevator_state_name(s.elevator.state),
             elevator_fault_name(s.elevator.fault), s.elevator.last_floor,
             s.elevator.destination, s.elevator.motor.out.pwm / 10u, (unsigned)s.elevator.door_open,
             (unsigned)s.elevator.notice, (unsigned long)s.dropped, (unsigned long)usb_dropped,
-            (unsigned)s.raw.joystick, (unsigned)s.raw.button, (unsigned)s.raw.floors,
+            (unsigned)s.raw.joystick, (unsigned)s.raw.button, (unsigned)s.raw.floors, (unsigned)s.raw.calls,
             (unsigned)s.raw.lower_limit, (unsigned)s.raw.upper_limit, (unsigned)s.raw.stop,
             (unsigned)s.raw.valid);
         uint16_t n = (uint16_t)(len < 0 ? 0 : len >= (int)sizeof tx ? (int)sizeof tx - 1 : len);

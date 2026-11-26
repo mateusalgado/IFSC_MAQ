@@ -4,7 +4,9 @@ O perfil [kit-bancada](KIT_BANCADA.md) acrescenta captura de abertura dos contat
 
 ## Camadas
 
-`inputs.c` normaliza a interação: debounce de 30 ms, filtro IIR de primeira ordem
+`inputs.c` normaliza a interação. Os três botões de andar da IHM passam pelo mesmo
+debounce dos sensores e geram um evento `EV_CALL0..2` por pressão, entregue depois
+de qualquer evento do painel na mesma amostra. Além disso, debounce de 30 ms, filtro IIR de primeira ordem
 com fator 1/4, zona morta, histerese e um evento por excursão do joystick.
 É necessário retornar fisicamente ao centro antes de nova seleção; cruzar o
 centro filtrado ao inverter o joystick não rearma a seleção. Botão pressionado
@@ -34,7 +36,7 @@ stateDiagram-v2
     INICIO --> REFERENCIA: botão longo liberado
     REFERENCIA --> CHEGADA: sensor térreo confirmado
     CHEGADA --> PARADO: confirmação mantida por 300 ms, porta abre
-    PARADO --> FECHANDO: destino diferente e clique, porta fecha
+    PARADO --> FECHANDO: destino diferente e clique ou botão de andar, porta fecha
     FECHANDO --> SUBIDA: 0,8 s e destino acima
     FECHANDO --> DESCIDA: 0,8 s e destino abaixo
     SUBIDA --> CHEGADA: sensor do destino
@@ -54,6 +56,7 @@ stateDiagram-v2
   sem deslocamento. Timeout de 15 s. Fim inferior não substitui sensor de andar.
 - `PARADO`: só aceita viagens se a posição referenciada continuar confirmada.
   Pedido do próprio andar gera aviso sem movimento. A porta fica aberta.
+  Um botão de andar da IHM equivale a selecionar e confirmar aquele andar.
 - `FECHANDO`: porta comandada fechada, motor da cabine parado. Espera 0,8 s,
   recusa pedidos e gera falha de posição se o sensor do andar for perdido.
 - `SUBIDA`/`DESCIDA`: um único destino. Exigir passagem pelos sensores em ordem,

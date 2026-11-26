@@ -12,5 +12,6 @@ void controller_step(Controller *c, const RawInputs *raw, uint32_t now) {
          * idle request or a fault acknowledgement when released in a new state. */
         c->inputs.pressing = false;
         c->inputs.released = false;
+        c->inputs.pending_calls = 0; /* a floor button never carries over to another state */
     }
 }

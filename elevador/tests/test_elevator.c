@@ -178,7 +178,7 @@ static void test_display(void) {
 }
 static void test_safety_sweep(void) {
     for (int st = EL_INIT; st < EL_STATE_COUNT; ++st) {
-        for (int event = EV_NONE; event <= EV_LONG; ++event) {
+        for (int event = EV_NONE; event < EV_COUNT; ++event) {
             fresh(); e.state = (ElState)st; e.motor.out = (MotorOutput){1, 200, MOTOR_NORMAL};
             s.stop = true; tick((InputEvent)event);
             assert(e.state == EL_FAULT && e.motor.out.pwm == 0);
@@ -257,6 +257,49 @@ static void test_door_display(void) {
     display_format(&e, 0, lines); assert(strstr(lines[1], "Fechando porta"));
     assert(strlen(lines[0]) == 16 && strlen(lines[1]) == 16);
 }
+static void test_calls(void) {
+    /* A call from another floor closes the door and travels there. */
+    home(); tick(EV_CALL2); assert(e.state == EL_CLOSING && e.destination == 2 && !e.door_open);
+    wait_ms(EL_DOOR_MS); assert(e.state == EL_UP);
+    s.floors = 0; wait_ms(500); s.floors = 2; tick(EV_NONE); s.floors = 0; wait_ms(500);
+    s.floors = 4; tick(EV_NONE); wait_ms(EL_ARRIVAL_MS); tick(EV_NONE);
+    assert(e.state == EL_IDLE && e.last_floor == 2 && e.door_open && e.selection == 2);
+    /* A call on the current floor keeps the door open and only warns. */
+    tick(EV_CALL2); assert(e.state == EL_IDLE && e.notice == NOTICE_SAME_FLOOR && e.door_open);
+    /* Calls are refused while busy and before referencing. */
+    tick(EV_CALL0); assert(e.state == EL_CLOSING);
+    tick(EV_CALL1); assert(e.destination == 0 && e.notice == NOTICE_BUSY);
+    fresh(); tick(EV_CALL1); assert(e.state == EL_INIT && e.notice == NOTICE_NEED_HOME);
+}
+static void test_call_inputs(void) {
+    Inputs i; Sensors out; RawInputs r = neutral(); inputs_init(&i, 0);
+    unsigned seen[EV_COUNT] = {0}; uint32_t t;
+    for (t = 0; t < 200; t += 10) (void)inputs_step(&i, &r, t, &out);
+    /* A 20 ms bounce is rejected; a held press is delivered once. */
+    r.calls = 2; (void)inputs_step(&i, &r, t, &out); t += 20;
+    r.calls = 0; for (; t < 300; t += 10) ++seen[inputs_step(&i, &r, t, &out)];
+    assert(seen[EV_CALL1] == 0);
+    r.calls = 2; for (; t < 1500; t += 10) ++seen[inputs_step(&i, &r, t, &out)];
+    assert(seen[EV_CALL1] == 1);
+    /* Two buttons pressed together are delivered one after the other. */
+    r.calls = 0; for (; t < 1600; t += 10) (void)inputs_step(&i, &r, t, &out);
+    r.calls = 5; for (; t < 1800; t += 10) ++seen[inputs_step(&i, &r, t, &out)];
+    assert(seen[EV_CALL0] == 1 && seen[EV_CALL2] == 1);
+}
+static void test_call_trip_raw(void) {
+    Controller c; RawInputs raw = neutral(); uint32_t time = 0;
+    controller_init(&c, time); raw_wait(&c, &raw, &time, 200);
+    raw_press(&c, &raw, &time, 1100); raw.floors = 1;
+    raw_wait(&c, &raw, &time, EL_DOOR_MS + 500); assert(c.elevator.state == EL_IDLE);
+    raw.calls = 2; raw_wait(&c, &raw, &time, 100); raw.calls = 0;
+    assert(c.elevator.state == EL_CLOSING && c.elevator.destination == 1);
+    /* A call pressed during the door closing is discarded, not queued. */
+    raw.calls = 4; raw_wait(&c, &raw, &time, 100); raw.calls = 0;
+    raw_wait(&c, &raw, &time, EL_DOOR_MS); assert(c.elevator.state == EL_UP);
+    raw.floors = 0; raw_wait(&c, &raw, &time, 300); raw.floors = 2;
+    raw_wait(&c, &raw, &time, 500); assert(c.elevator.state == EL_IDLE && c.elevator.last_floor == 1);
+    assert(c.elevator.destination == -1);
+}
 #define RUN(fn) do { fn(); ++tests; puts("PASS " #fn); } while (0)
 int main(void) {
     RUN(test_boot); RUN(test_home); RUN(test_existing_ground); RUN(test_both_directions);
@@ -266,5 +309,6 @@ int main(void) {
     RUN(test_motor); RUN(test_joystick); RUN(test_debounce); RUN(test_button);
     RUN(test_display); RUN(test_safety_sweep); RUN(test_integrated_raw_trip);
     RUN(test_fault_requires_new_press); RUN(test_door); RUN(test_door_display);
+    RUN(test_calls); RUN(test_call_inputs); RUN(test_call_trip_raw);
     printf("%u test groups passed\n", tests); return 0;
 }

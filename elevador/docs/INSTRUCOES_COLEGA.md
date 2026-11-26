@@ -73,7 +73,7 @@ Cada chave tem seu próprio fio de sinal. Todas compartilham o GND. O firmware h
 | HV do conversor e VCC do LCD | Trilho 5 V LCD |
 | GND do conversor e do LCD | Trilho GND |
 
-O backpack assumido pelo código usa P0=RS, P1=RW, P2=E, P3=luz e P4–P7=D4–D7. Confira **PCF8574T e endereço 0x27** no módulo. Deixe PA8, PB12, PB13 e PB14 apenas como pontos de prova. PB8 leva o sinal do servo da porta e também pode ficar só como ponto de prova. PB5 pode ficar livre e PC13 usa o LED da própria placa, quando presente.
+O backpack assumido pelo código usa P0=RS, P1=RW, P2=E, P3=luz e P4–P7=D4–D7. Confira **PCF8574T e endereço 0x27** no módulo. Deixe PA8, PB12, PB13 e PB14 apenas como pontos de prova. PB8 leva o sinal do servo da porta e também pode ficar só como ponto de prova. Os botões de andar da IHM (T, 1 e 2 em PB3, PB4 e PB15, cada um para GND) são opcionais neste roteiro. PB5 pode ficar livre e PC13 usa o LED da própria placa, quando presente.
 
 Antes de conectar SCL e SDA ao STM32, energize as alimentações e confira no multímetro aproximadamente **3,3 V no lado LV** e **5 V no lado HV**, com o barramento em repouso. Depois desligue, complete as ligações e confira a ausência de curto entre os trilhos.
 

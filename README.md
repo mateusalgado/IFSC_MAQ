@@ -10,6 +10,8 @@ Mini elevador didático de três andares, desenvolvido por Mateus Salgado Barboz
 - [Firmware de bancada pronto para gravar](elevador/firmware/kit-bancada/README.md).
 - [Documentação com análise, projeto, implementação e testes](elevador/README.md).
 - [Ficha de levantamento da mecânica e das peças](elevador/docs/FICHA_LEVANTAMENTO_ETAPA_2.md).
+- Modelos para impressão 3D: [torre com varões](elevador/mecanica/README.md) (recomendada), [torre toda impressa](elevador/mecanica-impressa/README.md) e [IHM](elevador/ihm/README.md). As duas torres são alternativas; escolha uma. Versões anteriores ficam em [arquivo/versoes](elevador/arquivo/versoes/README.md).
+- [Revisão do projeto e próximos passos](elevador/docs/REVISAO_PROJETO_2026-11-25.md).
 
 A primeira montagem funciona com contatos manuais para representar os andares. O perfil de bancada mantém a ponte desabilitada. O acionamento da cabine depende das medidas, da retenção e da seleção de motor, driver e fonte.
 

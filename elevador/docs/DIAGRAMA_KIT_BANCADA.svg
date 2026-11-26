@@ -217,5 +217,5 @@
 <text x="32" y="1396" font-size="17" font-weight="700" fill="#183832" text-anchor="start">Programação e diagnóstico</text>
 <text x="265" y="1396" font-size="16" font-weight="400" fill="#183832" text-anchor="start">PA13 / SWDIO e PA14 / SWCLK para ST-LINK. Use o conector USB da placa para o log.</text>
 <text x="32" y="1424" font-size="17" font-weight="700" fill="#183832" text-anchor="start">Opcionais</text>
-<text x="133" y="1424" font-size="16" font-weight="400" fill="#183832" text-anchor="start">PC13: LED da placa. PB5: falha. PB8: sinal do servo da porta, 50 Hz, 1,0 ms fechada e 2,0 ms aberta.</text>
+<text x="133" y="1424" font-size="16" font-weight="400" fill="#183832" text-anchor="start">PC13: LED da placa. PB5: falha. PB8: servo da porta. PB3/PB4/PB15: botões T/1/2.</text>
 </svg>

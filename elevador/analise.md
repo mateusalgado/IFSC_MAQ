@@ -12,6 +12,7 @@ O operador tem uma cabine guiada, três paradas e um único comando de destino. 
 
 - **RF01 · Referenciar.** Encontrar o sensor do térreo ou reconhecer que a cabine já está nele. O fim de curso inferior interrompe a busca.
 - **RF02 · Viajar.** Atender um destino por vez e observar os sensores na sequência física. Na chegada, zerar o comando e confirmar a permanência no andar.
+- **RF07 · IHM.** Uma caixa de comando reúne LCD, joystick, um botão por andar (T, 1, 2), botão de emergência e LED de falha. Com a cabine parada e referenciada, o botão de outro andar inicia a viagem até ele. Pedidos durante movimento são recusados.
 - **RF06 · Porta.** Um servomotor abre a porta com a cabine parada num andar e fecha antes de qualquer movimento. O motor da cabine só recebe comando depois do tempo de fechamento. Em falha, a porta permanece onde estava.
 - **RF03 · Interromper.** Parada, limite, sensores incoerentes ou prazo vencido cortam o comando. Após corrigir a causa, uma pressão longa reconhece a falha e outra solicita referência.
 - **RF04 · Observar.** Exibir estado e destino no LCD e fornecer diagnóstico USB para identificar entrada, sensor e comando durante o teste.

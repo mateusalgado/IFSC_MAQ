@@ -62,6 +62,11 @@ static void idle(Elevator *e, InputEvent event, uint32_t now) {
     door(e, true, now);
     if (event == EV_UP && e->selection < 2) { ++e->selection; ++e->revision; }
     if (event == EV_DOWN && e->selection > 0) { --e->selection; ++e->revision; }
+    if (event >= EV_CALL0 && event <= EV_CALL2) {
+        /* An HMI floor button is a selected and confirmed request for that floor. */
+        e->selection = (int)(event - EV_CALL0); ++e->revision;
+        event = EV_CONFIRM;
+    }
     if (event == EV_CONFIRM) {
         if (e->selection == e->current_floor) { notice(e, NOTICE_SAME_FLOOR, now); return; }
         e->destination = e->selection;
