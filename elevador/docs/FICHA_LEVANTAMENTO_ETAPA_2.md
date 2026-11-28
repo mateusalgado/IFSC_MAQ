@@ -15,10 +15,10 @@ Os IDs abaixo identificam **candidatos de projeto**. A coluna de estoque só dev
 | Cabine e guias | Cabine leve com paradas no térreo, 1º e 2º. Uso de contrapeso pendente. [Plano](PLANO_DE_RETOMADA_MAQ.md) | Pendente |
 | T1 · transmissão | Tambor/cabo, correia ou fuso dependem da estrutura escolhida. Mancais e acoplamento pendentes. [Mecânica](HARDWARE.md) | Pendente |
 | M1 · motor/redutor | Proposta MAQ de motor CC com redução. Candidato de kit TT 3–6 V. [Plano](PLANO_DE_RETOMADA_MAQ.md) · [Exemplar de referência 3777](https://www.adafruit.com/product/3777) | Pendente |
-| M2 · servo da porta | Servomotor de posição tipo SG90, 5 V, sinal em PB8. Porta e suporte nos modelos de [impressão 3D](../mecanica/README.md). [Hardware](HARDWARE.md) | Pendente |
+| M2 · servo da porta | Servomotor de posição tipo SG90, 5 V, sinal em PB8. Porta e suporte nos modelos de [impressão 3D](../impressao3d/README.md). [Hardware](HARDWARE.md) | Pendente |
 | B0/B1/B2 · botões de andar | Botões de pulso NA de 12 mm (T, 1, 2) na IHM, em PB3, PB4 e PB15. | Pendente |
 | P1 · emergência | Botão cogumelo de 22 mm com trava, contato NF, na IHM. | Pendente |
-| E1 · IHM | Caixa impressa com LCD, joystick, botões, emergência, LED, protoboards e jaques. [IHM](../ihm/README.md) | Pendente |
+| E1 · IHM | Caixa impressa com LCD, joystick, botões, emergência, LED, protoboards e jaques. [IHM](../impressao3d/README.md) | Pendente |
 | R1 · retenção | Deve sustentar a cabine sem alimentação. Mecanismo e capacidade pendentes. [Bancada](BANCADA.md) | Pendente |
 | C1 · controle | Alvo STM32F411CEU6, HSE 25 MHz, com SWD e USB. Conferir marcação, cristal, regulador e pinos expostos. [Hardware](HARDWARE.md) · [Clock do firmware](../ports/stm32f411/main.c) | Pendente |
 | D1 · driver | Perfil TB6612FNG, canal A, lógica prevista de 3,3 V. [Perfil de bancada](KIT_BANCADA.md) | Pendente |

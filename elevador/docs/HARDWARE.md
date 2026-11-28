@@ -24,7 +24,7 @@ FreeRTOS usa SysTick. Não utilizar configuração F103 de `washmachine`.
 - **Alimentação:** fonte do motor dimensionada após a escolha do motor;
   alimentação regulada da lógica, desacoplamento, proteção e retorno de corrente.
 - **Interface:** joystick analógico com botão; LCD 16×2 e módulo I²C a confirmar.
-  Ficam na tampa da [IHM](../ihm/README.md), com os botões de andar e a emergência.
+  Ficam na tampa da [IHM](../impressao3d/README.md), com os botões de andar e a emergência.
   Conferir tensão, endereço e mapeamento do expansor; não assumir 0x27/PCF8574.
 - **Posição:** três sensores pontuais, um por andar; escolher contato, óptico ou
   magnético, faixa de detecção, polaridade, repetibilidade e montagem.

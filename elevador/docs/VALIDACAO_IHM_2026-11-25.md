@@ -9,7 +9,7 @@ Uma versão intermediária do mesmo dia, com botoeiras de chamada presas em cada
 - **Entradas.** Novo campo `calls` na amostra (bits dos botões T, 1 e 2) e eventos `EV_CALL0..2`. Cada botão passa pelo debounce de 30 ms e gera um evento por pressão. Dois botões juntos são entregues um depois do outro. [Entradas](../src/inputs.c)
 - **Estados.** Em PARADO, o botão de um andar equivale a selecionar e confirmar esse andar. Nos demais estados é recusado com o aviso de ocupado, ou de referência pendente em INICIO. O controlador descarta apertos pendentes a cada troca de estado. [Estados](../src/elevator.c)
 - **Port.** PB3, PB4 e PB15 com pull-up interno, contato NA para GND. O diagnóstico USB ganhou o campo `calls`. [Port do kit](../ports/stm32f411/kit/board_kit.c)
-- **3D.** Pasta nova [ihm/](../ihm/README.md): caixa, tampa com o painel de comando, anel amarelo da emergência e calços de 15°. Modo `colisao` nos dois modelos de torre. As torres não mudaram de forma.
+- **3D.** Pasta nova `ihm/` (hoje em [arquivo/versoes/v4_2026-11-25_ihm-separada](../arquivo/versoes/v4_2026-11-25_ihm-separada/)): caixa, tampa com o painel de comando, anel amarelo da emergência e calços de 15°. Modo `colisao` nos dois modelos de torre. As torres não mudaram de forma.
 
 ## Testes no computador
 
@@ -35,7 +35,7 @@ HEX distribuído em [firmware/kit-bancada](../firmware/kit-bancada/README.md): 7
 
 ## Verificação do 3D
 
-OpenSCAD 2021.01. Todas as peças de `mecanica/`, `mecanica-impressa/` e `ihm/` geram sólidos fechados. O modo `colisao` das duas torres intersecta a cabine, com a porta fechada a cada 20 mm de curso e aberta em cada andar, com base, varões ou coluna, topo, motor, tambor e braçadeiras ou grampos com o corpo das microchaves. Só restaram contatos de volume zero da cabine apoiada no batente inferior.
+OpenSCAD 2021.01. Todas as peças de `mecanica/`, `mecanica-impressa/` e `ihm/` geraram sólidos fechados. Essas pastas foram arquivadas em 26/11/2026, quando a estrutura passou a ser toda impressa numa base única ([impressao3d](../impressao3d/README.md)). O modo `colisao` das duas torres intersecta a cabine, com a porta fechada a cada 20 mm de curso e aberta em cada andar, com base, varões ou coluna, topo, motor, tambor e braçadeiras ou grampos com o corpo das microchaves. Só restaram contatos de volume zero da cabine apoiada no batente inferior.
 
 ## Não executado
 

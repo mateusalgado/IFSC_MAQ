@@ -43,9 +43,7 @@ indefinido. Não usar `-DNDEBUG`, pois os testes empregam `assert`.
 - [Montagem, calibração e roteiro de bancada](docs/BANCADA.md).
 - [Evidências e limites da validação](docs/VALIDACAO.md).
 - [Validação da porta com servomotor, 18/11/2026](docs/VALIDACAO_PORTA_2026-11-18.md).
-- [Protótipo mecânico para impressão 3D](mecanica/README.md).
-- [Protótipo mecânico com estrutura toda impressa](mecanica-impressa/README.md).
-- [IHM (caixa de comando) para impressão 3D](ihm/README.md).
+- [Peças para impressão 3D: torre, cabine e IHM numa base única](impressao3d/README.md).
 - [Versões anteriores de 3D e hardware](arquivo/versoes/README.md).
 - [Revisão do projeto e próximos passos, 25/11/2026](docs/REVISAO_PROJETO_2026-11-25.md).
 - [Validação da IHM, 25/11/2026](docs/VALIDACAO_IHM_2026-11-25.md).

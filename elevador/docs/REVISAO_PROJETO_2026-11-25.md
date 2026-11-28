@@ -1,5 +1,7 @@
 # Revisão do projeto e próximos passos · 25/11/2026
 
+> **Atualização de 26/11/2026.** A equipe decidiu por uma estrutura toda impressa, sem varões nem tábua, com a IHM aparafusada na base da torre. Isso substitui as decisões 1 e 2 abaixo. O modelo atual está em [impressao3d](../impressao3d/README.md), e os itens sobre a torre toda impressa (deslizamento, cabine em balanço) passam a valer para ele. Os demais pontos continuam válidos.
+
 Revisão geral do mini elevador com foco no 3D, para orientar o início da montagem. Cobre a versão atual: torres da v2 com porta, IHM nova e firmware com os botões de andar. Os pontos estão em ordem de prioridade dentro de cada seção.
 
 ## Situação atual
